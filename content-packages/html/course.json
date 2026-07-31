@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "pkg-html-fundamentals",
+  "exportedAt": "2026-07-30T20:00:00Z",
+  "exportedBy": "owner",
+  "course": {
+    "slug": "html-fundamentals",
+    "title_ar": "أساسيات لغة HTML — بناء هيكل الصفحات",
+    "description_ar": "تعلم كيفية بناء وتنسيق هيكل صفحات الويب بلغة HTML5 بشكل تفاعلي وممتع للأبطال الصغار.",
+    "subject": "html"
+  },
+  "modules": [
+    { "id": "mod-html-1", "title_ar": "الموديل 1: هيكل مستند HTML5 والوسوم الأساسية", "description_ar": "فهم الوسوم الأوّلية والعناوين والفقرات.", "order_index": 1 },
+    { "id": "mod-html-2", "title_ar": "الموديل 2: النصوص والروابط والقوائم", "description_ar": "تنسيق النص وإنشاء القوائم والروابط التشعبية.", "order_index": 2 },
+    { "id": "mod-html-3", "title_ar": "الموديل 3: الوسائط والنماذج والجداول", "description_ar": "إدراج الصور والفيديوهات والجداول ونماذج المدخلات.", "order_index": 3 }
+  ],
+  "lessons": [
+    { "id": "les-html-101", "module_id": "mod-html-1", "title_ar": "1. هيكل صفحة HTML5 الأساسي", "slug": "html-doctype-structure", "estimated_minutes": 15, "order_index": 1, "status": "published" },
+    { "id": "les-html-102", "module_id": "mod-html-1", "title_ar": "2. وسوم العناوين h1 إلى h6", "slug": "html-headings", "estimated_minutes": 15, "order_index": 2, "status": "published" },
+    { "id": "les-html-103", "module_id": "mod-html-1", "title_ar": "3. وسوم الفقرات والسطور الجديدة p & br", "slug": "html-paragraphs", "estimated_minutes": 15, "order_index": 3, "status": "published" },
+    { "id": "les-html-104", "module_id": "mod-html-1", "title_ar": "4. الوسوم الدلالية header & footer & main", "slug": "html-semantic-elements", "estimated_minutes": 15, "order_index": 4, "status": "published" },
+    { "id": "les-html-105", "module_id": "mod-html-2", "title_ar": "5. إنشاء الروابط التشعبية الوسم a", "slug": "html-links-anchor", "estimated_minutes": 15, "order_index": 5, "status": "published" },
+    { "id": "les-html-106", "module_id": "mod-html-2", "title_ar": "6. القوائم غير المرتبة ul & li", "slug": "html-unordered-lists", "estimated_minutes": 15, "order_index": 6, "status": "published" },
+    { "id": "les-html-107", "module_id": "mod-html-2", "title_ar": "7. القوائم المرتبة ol & li", "slug": "html-ordered-lists", "estimated_minutes": 15, "order_index": 7, "status": "published" },
+    { "id": "les-html-108", "module_id": "mod-html-2", "title_ar": "8. تنسيق النصوص b & i & mark", "slug": "html-text-formatting", "estimated_minutes": 15, "order_index": 8, "status": "published" },
+    { "id": "les-html-109", "module_id": "mod-html-3", "title_ar": "9. إدراج الصور وسم img والوصف alt", "slug": "html-images-alt", "estimated_minutes": 15, "order_index": 9, "status": "published" },
+    { "id": "les-html-110", "module_id": "mod-html-3", "title_ar": "10. الجداول في HTML وسوم table & tr & td", "slug": "html-tables-basic", "estimated_minutes": 20, "order_index": 10, "status": "published" },
+    { "id": "les-html-111", "module_id": "mod-html-3", "title_ar": "11. نماذج الإدخال form & input", "slug": "html-forms-input", "estimated_minutes": 20, "order_index": 11, "status": "published" },
+    { "id": "les-html-112", "module_id": "mod-html-3", "title_ar": "12. الأزرار وأنواعها button", "slug": "html-buttons", "estimated_minutes": 15, "order_index": 12, "status": "published" }
+  ],
+  "questions": [
+    { "id": "q-pkg-101", "type": "single_choice", "prompt_ar": "ما الوسم المسئول عن تعريف بداية ونهاية مستند HTML؟", "difficulty": "easy", "points": 10, "options": { "choices": ["<html>", "<body>", "<head>", "<div>"] }, "correct_answer": "<html>", "explanation_ar": "الوسم <html> يحوي جميع عناصر الصفحة الأكاديمية." },
+    { "id": "q-pkg-102", "type": "single_choice", "prompt_ar": "ما الوسم المستخدم لإضافة عنوان رئيسي كبير في الأعلى؟", "difficulty": "easy", "points": 10, "options": { "choices": ["<h1>", "<h6>", "<p>", "<title>"] }, "correct_answer": "<h1>", "explanation_ar": "الوسم <h1> هو العنوان الأكبر والأهم في الصفحة." }
+  ],
+  "unitQuizzes": [
+    { "id": "quiz-html-1", "module_id": "mod-html-1", "title_ar": "اختبار تقييمي للموديل الأول — هيكل HTML5", "passing_score": 70, "question_ids": ["q-pkg-101", "q-pkg-102"] }
+  ]
+}

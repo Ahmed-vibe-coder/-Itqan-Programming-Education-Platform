@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "pkg-css-styling",
+  "exportedAt": "2026-07-30T20:00:00Z",
+  "exportedBy": "owner",
+  "course": {
+    "slug": "css-styling",
+    "title_ar": "فن التنسيق بلغة CSS — الألوان والمخططات",
+    "description_ar": "تعلم كيفية تزيين وتنسيق العناصر والألوان والخطوط والمخططات التفاعلية.",
+    "subject": "css"
+  },
+  "modules": [
+    { "id": "mod-css-1", "title_ar": "الموديل 1: المحددات والألوان والخطوط", "description_ar": "فهم المحددات Selectors والخصائص الأساسية في CSS.", "order_index": 1 },
+    { "id": "mod-css-2", "title_ar": "الموديل 2: نموذج الصندوق (Box Model) والحدود", "description_ar": "التحكم بالهوامش الداخلية والخارجية والحدود.", "order_index": 2 },
+    { "id": "mod-css-3", "title_ar": "الموديل 3: التخطيط المرن Flexbox والشبكة Grid", "description_ar": "ترتيب العناصر بشكل تفاعلي مرن ومستجيب للشاشات.", "order_index": 3 }
+  ],
+  "lessons": [
+    { "id": "les-css-101", "module_id": "mod-css-1", "title_ar": "1. خاصية اللون والخلفية color & background", "slug": "css-color-properties", "estimated_minutes": 15, "order_index": 1, "status": "published" },
+    { "id": "les-css-102", "module_id": "mod-css-1", "title_ar": "2. المحددات المباشرة بالوسم Tag Selector", "slug": "css-tag-selector", "estimated_minutes": 15, "order_index": 2, "status": "published" },
+    { "id": "les-css-103", "module_id": "mod-css-1", "title_ar": "3. محدد الفئة class selector", "slug": "css-class-selector", "estimated_minutes": 15, "order_index": 3, "status": "published" },
+    { "id": "les-css-104", "module_id": "mod-css-1", "title_ar": "4. محدد المعرف id selector", "slug": "css-id-selector", "estimated_minutes": 15, "order_index": 4, "status": "published" },
+    { "id": "les-css-105", "module_id": "mod-css-2", "title_ar": "5. حجم الخط وعائلته font-size & font-family", "slug": "css-typography", "estimated_minutes": 15, "order_index": 5, "status": "published" },
+    { "id": "les-css-106", "module_id": "mod-css-2", "title_ar": "6. الهامش الداخلي padding", "slug": "css-padding", "estimated_minutes": 15, "order_index": 6, "status": "published" },
+    { "id": "les-css-107", "module_id": "mod-css-2", "title_ar": "7. الهامش الخارجي margin", "slug": "css-margin", "estimated_minutes": 15, "order_index": 7, "status": "published" },
+    { "id": "les-css-108", "module_id": "mod-css-2", "title_ar": "8. حدود العناصر border & border-radius", "slug": "css-borders", "estimated_minutes": 15, "order_index": 8, "status": "published" },
+    { "id": "les-css-109", "module_id": "mod-css-3", "title_ar": "9. العرض والارتفاع width & height", "slug": "css-dimensions", "estimated_minutes": 15, "order_index": 9, "status": "published" },
+    { "id": "les-css-110", "module_id": "mod-css-3", "title_ar": "10. التنسيق المرن display: flex", "slug": "css-flexbox-intro", "estimated_minutes": 20, "order_index": 10, "status": "published" },
+    { "id": "les-css-111", "module_id": "mod-css-3", "title_ar": "11. محاذاة العناصر justify-content & align-items", "slug": "css-flexbox-alignment", "estimated_minutes": 20, "order_index": 11, "status": "published" },
+    { "id": "les-css-112", "module_id": "mod-css-3", "title_ar": "12. الشبكة البرمجية display: grid", "slug": "css-grid-basics", "estimated_minutes": 20, "order_index": 12, "status": "published" }
+  ],
+  "questions": [
+    { "id": "q-css-201", "type": "single_choice", "prompt_ar": "ما الخاصية المسئولة عن تغيير لون النص في CSS؟", "difficulty": "easy", "points": 10, "options": { "choices": ["color", "font-color", "text-color", "style"] }, "correct_answer": "color", "explanation_ar": "خاصية color هي المعيار الرسمي لتحديد لون الخط." }
+  ],
+  "unitQuizzes": [
+    { "id": "quiz-css-1", "module_id": "mod-css-1", "title_ar": "اختبار تقييمي للموديل الأول — أساسيات CSS", "passing_score": 70, "question_ids": ["q-css-201"] }
+  ]
+}

@@ -1,0 +1,15 @@
+export const BRAND = {
+  nameAr: 'إتقان',
+  nameEn: 'Itqan',
+  fullNameAr: 'منصة إتقان لتعليم البرمجة',
+  fullNameEn: 'Itqan Coding Academy',
+  taglineAr: 'تعلّم بعمق. طبّق بإتقان.',
+  taglineEn: 'Learn deeply. Apply with mastery.',
+  shortDescriptionAr: 'الأكاديمية العربية المتخصصة لتعليم البرمجة وتطوير الويب للناشئين.',
+  shortDescriptionEn: 'The specialized Arabic programming academy for young developers.',
+  supportEmail: 'support@itqan.edu',
+  domain: 'itqan.edu',
+  metaTitle: 'إتقان — الأكاديمية العربية المتخصصة لتعليم البرمجة',
+  metaDescription: 'منصة إتقان لتعليم البرمجة وتطوير الويب للناشئين بلغة عربية وسيطرة إتقانية عالية.',
+  themeColor: '#4355E8',
+};

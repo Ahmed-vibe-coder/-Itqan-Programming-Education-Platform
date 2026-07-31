@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ItqanCoursePackage",
+  "type": "object",
+  "required": ["schemaVersion", "packageId", "course", "modules", "lessons"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "packageId": { "type": "string" },
+    "exportedAt": { "type": "string" },
+    "exportedBy": { "type": "string" },
+    "course": {
+      "type": "object",
+      "required": ["slug", "title_ar", "subject"],
+      "properties": {
+        "slug": { "type": "string" },
+        "title_ar": { "type": "string" },
+        "description_ar": { "type": "string" },
+        "subject": { "type": "string", "enum": ["html", "css", "js"] }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title_ar", "order_index"]
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title_ar", "slug", "order_index"]
+      }
+    }
+  }
+}

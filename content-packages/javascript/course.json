@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageId": "pkg-javascript-core",
+  "exportedAt": "2026-07-30T20:00:00Z",
+  "exportedBy": "owner",
+  "course": {
+    "slug": "js-interactive",
+    "title_ar": "لغة JavaScript التفاعلية — البرمجة والمنطق",
+    "description_ar": "تعلم أساسيات المنطق البرمجي، المتغيرات، الدوال، والأحداث التفاعلية.",
+    "subject": "js"
+  },
+  "modules": [
+    { "id": "mod-js-1", "title_ar": "الموديل 1: المتغيرات والأنواع الأساسية", "description_ar": "فهم المتغيرات const و let وتخزين البيانات.", "order_index": 1 },
+    { "id": "mod-js-2", "title_ar": "الموديل 2: العمليات الحسابية والمنطقية والشرطية", "description_ar": "استخدام if & else والمقارنات المنطقية.", "order_index": 2 },
+    { "id": "mod-js-3", "title_ar": "الموديل 3: الدوال (Functions) وتفاعل الصفحة DOM", "description_ar": "كتابة الدوال التفاعلية والتحكم بعناصر الصفحة.", "order_index": 3 }
+  ],
+  "lessons": [
+    { "id": "les-js-101", "module_id": "mod-js-1", "title_ar": "1. الطباعة في الكونسول console.log", "slug": "js-console-log", "estimated_minutes": 15, "order_index": 1, "status": "published" },
+    { "id": "les-js-102", "module_id": "mod-js-1", "title_ar": "2. الإعلان عن المتغيرات let & const", "slug": "js-variables-declaration", "estimated_minutes": 15, "order_index": 2, "status": "published" },
+    { "id": "les-js-103", "module_id": "mod-js-1", "title_ar": "3. أنواع البيانات: النصوص والأرقام String & Number", "slug": "js-data-types-basic", "estimated_minutes": 15, "order_index": 3, "status": "published" },
+    { "id": "les-js-104", "module_id": "mod-js-1", "title_ar": "4. النوع المنطقي Boolean (true / false)", "slug": "js-booleans", "estimated_minutes": 15, "order_index": 4, "status": "published" },
+    { "id": "les-js-105", "module_id": "mod-js-2", "title_ar": "5. العمليات الحسابية + - * /", "slug": "js-math-operators", "estimated_minutes": 15, "order_index": 5, "status": "published" },
+    { "id": "les-js-106", "module_id": "mod-js-2", "title_ar": "6. دمغ النصوص (String Concatenation)", "slug": "js-string-concatenation", "estimated_minutes": 15, "order_index": 6, "status": "published" },
+    { "id": "les-js-107", "module_id": "mod-js-2", "title_ar": "7. الجمل الشرطية if & else", "slug": "js-conditional-if-else", "estimated_minutes": 20, "order_index": 7, "status": "published" },
+    { "id": "les-js-108", "module_id": "mod-js-2", "title_ar": "8. مقارنة القيم === و !==", "slug": "js-strict-equality", "estimated_minutes": 15, "order_index": 8, "status": "published" },
+    { "id": "les-js-109", "module_id": "mod-js-3", "title_ar": "9. كتابة دالة بسيطة function", "slug": "js-functions-intro", "estimated_minutes": 20, "order_index": 9, "status": "published" },
+    { "id": "les-js-110", "module_id": "mod-js-3", "title_ar": "10. تظهير القيمة المرجعة return", "slug": "js-function-return", "estimated_minutes": 20, "order_index": 10, "status": "published" },
+    { "id": "les-js-111", "module_id": "mod-js-3", "title_ar": "11. الوصول للعنصر document.getElementById", "slug": "js-dom-get-element", "estimated_minutes": 20, "order_index": 11, "status": "published" },
+    { "id": "les-js-112", "module_id": "mod-js-3", "title_ar": "12. التفاعل عند الضغط onclick event", "slug": "js-dom-click-event", "estimated_minutes": 20, "order_index": 12, "status": "published" }
+  ],
+  "questions": [
+    { "id": "q-js-301", "type": "single_choice", "prompt_ar": "ما الأمر المستعمل لطباعة معلومة في لوحة التحكم console؟", "difficulty": "easy", "points": 10, "options": { "choices": ["console.log()", "print()", "write()", "alert()"] }, "correct_answer": "console.log()", "explanation_ar": "الأمر console.log() يطبع المخرجات في وحدة التحكم المباشرة." }
+  ],
+  "unitQuizzes": [
+    { "id": "quiz-js-1", "module_id": "mod-js-1", "title_ar": "اختبار تقييمي للموديل الأول — أساسيات JS", "passing_score": 70, "question_ids": ["q-js-301"] }
+  ]
+}

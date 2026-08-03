@@ -9,13 +9,20 @@ export const MistakeNotebookPage: React.FC = () => {
 
   useEffect(() => {
     if (profile?.id) {
-      mistakeService.getStudentMistakes(profile.id).then(setMistakes);
+      mistakeService
+        .getStudentMistakes(profile.id)
+        .then(setMistakes)
+        .catch((err) => console.error(err));
     }
   }, [profile?.id]);
 
   const handleUpdate = async (id: string, status: MistakeEntry['review_status']) => {
-    await mistakeService.updateMistakeStatus(id, status);
-    setMistakes(mistakes.map((m) => (m.id === id ? { ...m, review_status: status } : m)));
+    try {
+      await mistakeService.updateMistakeStatus(id, status);
+      setMistakes(mistakes.map((m) => (m.id === id ? { ...m, review_status: status } : m)));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

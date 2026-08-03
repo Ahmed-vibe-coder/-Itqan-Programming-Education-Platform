@@ -2,28 +2,98 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { courseService } from '@/services/courseService';
 import { Course, Module } from '@/types/database';
-import { BookOpen, CheckCircle2, Lock, Play, ArrowRight, Clock } from 'lucide-react';
+import { BookOpen, CheckCircle2, Lock, Play, ArrowRight, Clock, AlertCircle, RefreshCw, FileQuestion } from 'lucide-react';
 
 export const CourseDetailPage: React.FC = () => {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<Module[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCourseData = () => {
+    if (!courseSlug) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    courseService
+      .getCourseBySlug(courseSlug)
+      .then(async (c) => {
+        if (!c) {
+          setCourse(null);
+          setLoading(false);
+          return;
+        }
+        setCourse(c);
+        try {
+          const mods = await courseService.getCourseModules(c.id);
+          setModules(mods || []);
+        } catch (mErr) {
+          console.error('Error loading course modules:', mErr);
+          setModules([]);
+        } finally {
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching course by slug:', err);
+        setError('حدث خطأ أثناء تحميل تفاصيل المنهج. يرجى المحاولة لاحقاً.');
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    if (courseSlug) {
-      courseService.getCourseBySlug(courseSlug).then((c) => {
-        if (c) {
-          setCourse(c);
-          courseService.getCourseModules(c.id).then(setModules);
-        }
-      });
-    }
+    fetchCourseData();
   }, [courseSlug]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-16 space-y-4">
+        <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs text-txt-muted font-medium">جاري تحميل تفاصيل المنهج...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 border border-red-500/20 bg-red-500/10 rounded-2xl text-center space-y-4 max-w-md mx-auto my-8">
+        <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
+        <p className="text-sm font-bold text-red-600 dark:text-red-400">{error}</p>
+        <button
+          onClick={fetchCourseData}
+          className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl flex items-center gap-2 mx-auto transition-all"
+        >
+          <RefreshCw className="w-4 h-4" />
+          <span>إعادة المحاولة</span>
+        </button>
+      </div>
+    );
+  }
 
   if (!course) {
     return (
-      <div className="text-center py-12 space-y-3">
-        <p className="text-sm text-txt-muted">جاري تحميل تفاصيل المنهج...</p>
+      <div className="p-8 border border-bdr bg-surface rounded-3xl text-center space-y-5 max-w-md mx-auto my-8 shadow-sm">
+        <div className="w-16 h-16 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center mx-auto">
+          <FileQuestion className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold text-txt-primary">المنهج غير موجود</h2>
+          <p className="text-xs text-txt-muted leading-relaxed">
+            عذراً، المنهج الدراسي الذي تبحث عنه غير موجود أو تم إزالته.
+          </p>
+        </div>
+        <Link
+          to="/app/courses"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl transition-all shadow-sm"
+        >
+          <ArrowRight className="w-4 h-4" />
+          <span>العودة لقائمة المناهج</span>
+        </Link>
       </div>
     );
   }

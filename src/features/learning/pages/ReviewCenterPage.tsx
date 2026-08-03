@@ -10,7 +10,10 @@ export const ReviewCenterPage: React.FC = () => {
 
   useEffect(() => {
     if (profile?.id) {
-      reviewService.getDueReviews(profile.id).then(setReviews);
+      reviewService
+        .getDueReviews(profile.id)
+        .then(setReviews)
+        .catch((err) => console.error(err));
     }
   }, [profile?.id]);
 

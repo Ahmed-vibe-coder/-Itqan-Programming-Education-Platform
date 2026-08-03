@@ -19,9 +19,9 @@ export const authService = {
   async validateInvitation(code: string) {
     if (!isSupabaseConfigured()) {
       if (code.toUpperCase().startsWith('NAWA')) {
-        return { id: 'inv-1', code, group_id: 'grp-1', is_active: true, used_count: 0, max_uses: 10 };
+        return { id: 'inv-1', code, group_id: '00000000-0000-0000-0000-000000000001', is_active: true, used_count: 0, max_uses: 10 };
       }
-      throw new Error('كود الدعوة غير صحيح.');
+      throw new Error('كود الدعوة غير صحيح أو غير مفعّل.');
     }
 
     const { data, error } = await supabase

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Logo } from '@/components/shared/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
@@ -9,12 +9,22 @@ import { UserRole } from '@/types/database';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { setMockUser, refreshSession } = useAuth();
+  const { user, role, setMockUser, refreshSession } = useAuth();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      if (role === 'teacher' || role === 'owner') {
+        navigate('/teacher', { replace: true });
+      } else {
+        navigate('/app', { replace: true });
+      }
+    }
+  }, [user, role, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,14 +46,14 @@ export const LoginPage: React.FC = () => {
           // Fetch profile by username to get registered email
           const { data: profileData } = await supabase
             .from('profiles')
-            .select('id')
+            .select('id, email')
             .eq('username', usernameOrEmail)
             .single();
 
-          if (!profileData) {
-            throw new Error('اسم المستخدم غير مسجل.');
+          if (!profileData || !(profileData as any).email) {
+            throw new Error('اسم المستخدم/البريد الإلكتروني أو كلمة المرور غير صحيحة.');
           }
-          // Note: In Supabase production, email auth is used directly or mapped via RPC
+          authEmail = (profileData as any).email;
         }
 
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -54,7 +64,19 @@ export const LoginPage: React.FC = () => {
         if (signInError) throw signInError;
         if (data.user) {
           await refreshSession();
-          // Role redirect handled dynamically via auth state
+
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', data.user.id)
+            .single();
+
+          const userRole = roleData?.role as UserRole | undefined;
+          if (userRole === 'teacher' || userRole === 'owner') {
+            navigate('/teacher', { replace: true });
+          } else {
+            navigate('/app', { replace: true });
+          }
         }
       } else {
         // Safe interactive demo login logic

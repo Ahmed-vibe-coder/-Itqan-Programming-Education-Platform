@@ -49,12 +49,14 @@ export const teacherService = {
 
   async createInvitation(groupId: string, maxUses: number = 10): Promise<Invitation> {
     const code = `NAWA-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    const safeGroupId = uuidRegex.test(groupId) ? groupId : '00000000-0000-0000-0000-000000000001';
 
     if (!isSupabaseConfigured()) {
       return {
         id: `inv-${Date.now()}`,
         code,
-        group_id: groupId,
+        group_id: safeGroupId,
         created_by: 'teacher-1',
         max_uses: maxUses,
         used_count: 0,
@@ -68,7 +70,7 @@ export const teacherService = {
       .from('invitations')
       .insert({
         code,
-        group_id: groupId,
+        group_id: safeGroupId,
         max_uses: maxUses,
         used_count: 0,
         is_active: true,

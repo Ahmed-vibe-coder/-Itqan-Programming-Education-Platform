@@ -2,17 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { courseService } from '@/services/courseService';
 import { Course } from '@/types/database';
-import { BookOpen, ArrowLeft, Clock, Sparkles } from 'lucide-react';
+import { BookOpen, ArrowLeft, Clock, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
 
 export const CourseCatalogPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCourses = () => {
+    setLoading(true);
+    setError(null);
+    courseService
+      .getPublishedCourses()
+      .then((data) => {
+        setCourses(data || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching courses:', err);
+        setError(err?.message || 'حدث خطأ أثناء تحميل الكورسات. يرجى المحاولة مرة أخرى.');
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    courseService.getPublishedCourses().then((data) => {
-      setCourses(data);
-      setLoading(false);
-    });
+    fetchCourses();
   }, []);
 
   return (
@@ -29,6 +43,24 @@ export const CourseCatalogPage: React.FC = () => {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-48 bg-surface border border-bdr rounded-2xl animate-pulse p-6" />
           ))}
+        </div>
+      ) : error ? (
+        <div className="p-8 border border-red-500/20 bg-red-500/10 rounded-2xl text-center space-y-4 max-w-md mx-auto">
+          <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
+          <p className="text-sm font-bold text-red-600 dark:text-red-400">{error}</p>
+          <button
+            onClick={fetchCourses}
+            className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl flex items-center gap-2 mx-auto transition-all"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>إعادة المحاولة</span>
+          </button>
+        </div>
+      ) : courses.length === 0 ? (
+        <div className="p-8 border border-bdr bg-surface rounded-2xl text-center space-y-3 max-w-md mx-auto">
+          <BookOpen className="w-10 h-10 text-txt-muted mx-auto" />
+          <h3 className="font-bold text-base text-txt-primary">لا توجد مناهج متاحة حالياً</h3>
+          <p className="text-xs text-txt-muted">سيتم إضافة مناهج دورية قريباً.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -10,7 +10,10 @@ export const SkillMapPage: React.FC = () => {
 
   useEffect(() => {
     if (profile?.id) {
-      skillService.getStudentSkills(profile.id, subject).then(setSkills);
+      skillService
+        .getStudentSkills(profile.id, subject)
+        .then(setSkills)
+        .catch((err) => console.error(err));
     }
   }, [profile?.id, subject]);
 

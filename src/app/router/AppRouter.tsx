@@ -18,6 +18,7 @@ const PrivacyPage = lazy(() => import('@/features/public/pages/PrivacyPage').the
 const TermsPage = lazy(() => import('@/features/public/pages/TermsPage').then(m => ({ default: m.TermsPage })));
 const HelpPage = lazy(() => import('@/features/public/pages/HelpPage').then(m => ({ default: m.HelpPage })));
 const UnauthorizedPage = lazy(() => import('@/features/public/pages/UnauthorizedPage').then(m => ({ default: m.UnauthorizedPage })));
+const NotFoundPage = lazy(() => import('@/features/public/pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 // Certificates Public Verification
 const CertificateVerificationPage = lazy(() => import('@/features/certificates/pages/CertificateVerificationPage').then(m => ({ default: m.CertificateVerificationPage })));
@@ -182,7 +183,7 @@ export const AppRouter: React.FC = () => {
           </Route>
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

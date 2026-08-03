@@ -7,7 +7,10 @@ export const TeacherAttentionPage: React.FC = () => {
   const [alerts, setAlerts] = useState<AttentionAlert[]>([]);
 
   useEffect(() => {
-    attentionService.getTeacherAttentionAlerts().then(setAlerts);
+    attentionService
+      .getTeacherAttentionAlerts()
+      .then(setAlerts)
+      .catch((err) => console.error(err));
   }, []);
 
   return (

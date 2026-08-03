@@ -55,16 +55,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Check local storage mock session
         const storedUser = localStorage.getItem('nawa_mock_session');
         if (storedUser) {
-          const parsed = JSON.parse(storedUser);
-          setUser(parsed.user);
-          setProfile(parsed.profile);
-          setRole(parsed.role);
+          try {
+            const parsed = JSON.parse(storedUser);
+            if (typeof parsed !== 'object' || parsed === null) {
+              throw new Error('Invalid session object in localStorage');
+            }
+            setUser(parsed.user ?? null);
+            setProfile(parsed.profile ?? null);
+            setRole(parsed.role ?? null);
+          } catch (e) {
+            console.error('Failed to parse nawa_mock_session:', e);
+            localStorage.removeItem('nawa_mock_session');
+            setUser(null);
+            setProfile(null);
+            setRole(null);
+          }
         } else {
           setUser(null);
           setProfile(null);
           setRole(null);
         }
-        setLoading(false);
         return;
       }
 
@@ -84,8 +94,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .eq('user_id', session.user.id)
           .single();
 
-        if (profileData) setProfile(profileData);
-        if (roleData) setRole(roleData.role as UserRole);
+        setProfile(profileData || null);
+        setRole((roleData?.role as UserRole) || null);
       } else {
         setUser(null);
         setProfile(null);
@@ -93,6 +103,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (err) {
       console.error('Session refresh error:', err);
+      setUser(null);
+      setProfile(null);
+      setRole(null);
     } finally {
       setLoading(false);
     }
@@ -100,6 +113,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     refreshSession();
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (['SIGNED_IN', 'SIGNED_OUT', 'TOKEN_REFRESHED'].includes(event)) {
+        if (session?.user) {
+          setUser(session.user);
+          try {
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
+
+            const { data: roleData } = await supabase
+              .from('user_roles')
+              .select('role')
+              .eq('user_id', session.user.id)
+              .single();
+
+            setProfile(profileData || null);
+            setRole((roleData?.role as UserRole) || null);
+          } catch {
+            setProfile(null);
+            setRole(null);
+          }
+        } else {
+          setUser(null);
+          setProfile(null);
+          setRole(null);
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {

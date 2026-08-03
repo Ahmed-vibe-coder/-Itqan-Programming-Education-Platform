@@ -28,6 +28,11 @@ for (const file of files) {
   if (fs.existsSync(filePath)) {
     let content = fs.readFileSync(filePath, 'utf8');
 
+    // Make all CREATE TYPE idempotent
+    content = content.replace(/CREATE TYPE ([a-zA-Z0-9_]+) AS ENUM \(([^)]+)\);/g, (match, typeName, values) => {
+      return `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '${typeName}') THEN CREATE TYPE ${typeName} AS ENUM (${values}); END IF; END $$;`;
+    });
+
     // Make all CREATE TABLE idempotent
     content = content.replace(/CREATE TABLE public\./g, 'CREATE TABLE IF NOT EXISTS public.');
     content = content.replace(/CREATE TABLE IF NOT EXISTS IF NOT EXISTS/g, 'CREATE TABLE IF NOT EXISTS');

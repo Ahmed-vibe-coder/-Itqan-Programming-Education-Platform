@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
-    CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
+    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student'); END IF; END $$;
   END IF;
 END $$;
 
@@ -73,10 +73,10 @@ CREATE TABLE IF NOT EXISTS public.invitations (
 -- 3. COURSES & LESSONS
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN
-    CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
+    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived'); END IF; END $$;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN
-    CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
+    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN CREATE TYPE course_subject AS ENUM ('html', 'css', 'js'); END IF; END $$;
   END IF;
 END $$;
 
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS public.lesson_blocks (
 );
 
 -- 4. PROGRESS & WORKSPACES
-CREATE TYPE progress_status AS ENUM ('locked', 'available', 'in_progress', 'awaiting_mastery', 'completed');
+DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'progress_status') THEN CREATE TYPE progress_status AS ENUM ('locked', 'available', 'in_progress', 'awaiting_mastery', 'completed'); END IF; END $$;
 
 CREATE TABLE IF NOT EXISTS public.lesson_progress (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

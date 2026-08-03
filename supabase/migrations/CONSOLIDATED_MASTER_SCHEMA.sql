@@ -1,6 +1,12 @@
 -- CONSOLIDATED MASTER SCHEMA FOR ITQAN PLATFORM
 -- Generated for 1-Click Execution in Supabase SQL Editor
--- Total Migrations Merged: 7
+
+-- ==============================================================================
+-- OPTION A: FRESH CLEAN START (Recommended if you already created partial tables)
+-- If you get "relation profiles already exists" or want a 100% fresh clean start,
+-- UNCOMMENT the following line and run the script:
+-- DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;
+-- ==============================================================================
 
 -- ==========================================
 -- FILE: 20260730_init_schema.sql
@@ -10,7 +16,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. PROFILES & ROLES
-CREATE TABLE public.profiles (
+CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL,
   username TEXT UNIQUE NOT NULL,
@@ -20,9 +26,13 @@ CREATE TABLE public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
+    CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
+  END IF;
+END $$;
 
-CREATE TABLE public.user_roles (
+CREATE TABLE IF NOT EXISTS public.user_roles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   role user_role_enum NOT NULL,
@@ -31,7 +41,7 @@ CREATE TABLE public.user_roles (
 );
 
 -- 2. GROUPS & INVITATIONS
-CREATE TABLE public.groups (
+CREATE TABLE IF NOT EXISTS public.groups (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   code TEXT UNIQUE NOT NULL,
@@ -41,7 +51,7 @@ CREATE TABLE public.groups (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.group_members (
+CREATE TABLE IF NOT EXISTS public.group_members (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   group_id UUID NOT NULL REFERENCES public.groups(id) ON DELETE CASCADE,
   student_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -49,7 +59,7 @@ CREATE TABLE public.group_members (
   UNIQUE(group_id, student_id)
 );
 
-CREATE TABLE public.invitations (
+CREATE TABLE IF NOT EXISTS public.invitations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   code TEXT UNIQUE NOT NULL,
   group_id UUID REFERENCES public.groups(id) ON DELETE SET NULL,
@@ -62,10 +72,16 @@ CREATE TABLE public.invitations (
 );
 
 -- 3. COURSES & LESSONS
-CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
-CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN
+    CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN
+    CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
+  END IF;
+END $$;
 
-CREATE TABLE public.courses (
+CREATE TABLE IF NOT EXISTS public.courses (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   slug TEXT UNIQUE NOT NULL,
   title_ar TEXT NOT NULL,

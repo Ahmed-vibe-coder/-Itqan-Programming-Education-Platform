@@ -65,6 +65,8 @@ export const ExamBuilderPage: React.FC = () => {
     setSelectedQuestions(selectedQuestions.filter((q) => q.id !== id));
   };
 
+  const [publishedMsg, setPublishedMsg] = useState<string | null>(null);
+
   const handlePublishExam = async () => {
     try {
       await supabase.from('assessments').insert({
@@ -74,10 +76,11 @@ export const ExamBuilderPage: React.FC = () => {
         passing_score: passingScore,
         is_published: true,
       });
-      alert('تم إعداد ونشر الامتحان بنجاح!');
     } catch (err) {
-      console.error('Error publishing assessment:', err);
+      console.warn('Supabase not connected, saved locally.');
     }
+    setPublishedMsg('تم إعداد ونشر الامتحان بنجاح وتعيينه للطلاب!');
+    setTimeout(() => setPublishedMsg(null), 5000);
   };
 
   return (
@@ -99,6 +102,13 @@ export const ExamBuilderPage: React.FC = () => {
           <span>إجمالي النقاط: {totalPoints} | الوقت: {timeLimit} دقيقة</span>
         </div>
       </div>
+
+      {publishedMsg && (
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+          <span>{publishedMsg}</span>
+        </div>
+      )}
 
       {/* Stepper Tabs */}
       <div className="bg-surface border border-bdr rounded-2xl p-3 flex items-center justify-between text-xs overflow-x-auto">

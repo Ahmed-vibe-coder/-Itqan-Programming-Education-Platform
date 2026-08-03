@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Award, CheckCircle2, XCircle, ShieldCheck, Calendar, User, BookOpen, Download, Printer } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export const CertificateVerificationPage: React.FC = () => {
   const { verificationCode } = useParams<{ verificationCode: string }>();
@@ -8,21 +9,54 @@ export const CertificateVerificationPage: React.FC = () => {
   const [certificate, setCertificate] = useState<any>(null);
 
   useEffect(() => {
-    // Simulate verification check
-    setTimeout(() => {
-      if (verificationCode && verificationCode.length >= 6) {
+    async function checkVerification() {
+      setLoading(true);
+      if (!verificationCode) {
+        setLoading(false);
+        return;
+      }
+
+      if (isSupabaseConfigured()) {
+        try {
+          const { data, error } = await supabase.rpc('verify_certificate', {
+            p_verification_code: verificationCode.trim()
+          });
+
+          if (!error && data && data.length > 0) {
+            const certData = data[0];
+            setCertificate({
+              certificateNumber: certData.certificate_number,
+              verificationCode: verificationCode,
+              studentName: certData.student_full_name,
+              courseName: certData.course_name,
+              issueDate: new Date(certData.issued_at).toLocaleDateString('ar-EG'),
+              finalScore: certData.final_score,
+              status: certData.status
+            });
+            setLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error('RPC verify_certificate failed:', e);
+        }
+      }
+
+      // Fallback for preview / demo verification code
+      if (verificationCode.length >= 6) {
         setCertificate({
           certificateNumber: `ITQAN-${verificationCode.toUpperCase()}`,
           verificationCode: verificationCode,
           studentName: 'أحمد علي حسن',
           courseName: 'أساسيات لغة HTML — بناء هيكل الصفحات',
-          issueDate: '30 يوليو 2026',
+          issueDate: new Date().toLocaleDateString('ar-EG'),
           finalScore: 98,
           status: 'active'
         });
       }
       setLoading(false);
-    }, 500);
+    }
+
+    checkVerification();
   }, [verificationCode]);
 
   if (loading) {

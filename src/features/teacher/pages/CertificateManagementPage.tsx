@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Award, Plus, Search, ShieldCheck, CheckCircle2, XCircle, FileText, QrCode, ExternalLink, Download } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export const CertificateManagementPage: React.FC = () => {
-  const [certificates, setCertificates] = useState([
+  const [certificates, setCertificates] = useState<any[]>([
     {
       id: 'cert-1',
       certificateNumber: 'ITQAN-88A92B',
@@ -29,14 +30,71 @@ export const CertificateManagementPage: React.FC = () => {
   const [courseName, setCourseName] = useState('');
   const [score, setScore] = useState(100);
 
-  const handleIssueCertificate = (e: React.FormEvent) => {
+  useEffect(() => {
+    async function loadCertificates() {
+      if (isSupabaseConfigured()) {
+        const { data, error } = await supabase
+          .from('certificates')
+          .select('*')
+          .order('issued_at', { ascending: false });
+
+        if (!error && data) {
+          setCertificates(data.map((c: any) => ({
+            id: c.id,
+            certificateNumber: c.certificate_number,
+            verificationCode: c.verification_code,
+            studentName: c.student_full_name,
+            courseName: c.course_name,
+            issuedAt: new Date(c.issued_at).toISOString().split('T')[0],
+            finalScore: c.final_score,
+            status: c.status
+          })));
+        }
+      }
+    }
+    loadCertificates();
+  }, []);
+
+  const handleIssueCertificate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentName || !courseName) return;
 
     const randomCode = Math.random().toString(36).substring(2, 8);
+    const certNum = `ITQAN-${randomCode.toUpperCase()}`;
+
+    if (isSupabaseConfigured()) {
+      const { data: userData } = await supabase.auth.getUser();
+      const { data, error } = await supabase.from('certificates').insert({
+        certificate_number: certNum,
+        verification_code: randomCode,
+        student_id: userData.user?.id || '10000000-0000-0000-0000-000000000001',
+        course_id: '10000000-0000-0000-0000-000000000001',
+        student_full_name: studentName,
+        course_name: courseName,
+        final_score: score,
+        status: 'active'
+      }).select().single();
+
+      if (!error && data) {
+        setCertificates([{
+          id: data.id,
+          certificateNumber: data.certificate_number,
+          verificationCode: data.verification_code,
+          studentName: data.student_full_name,
+          courseName: data.course_name,
+          issuedAt: new Date(data.issued_at).toISOString().split('T')[0],
+          finalScore: data.final_score,
+          status: data.status
+        }, ...certificates]);
+        setStudentName('');
+        setCourseName('');
+        return;
+      }
+    }
+
     const newCert = {
       id: `cert-${Date.now()}`,
-      certificateNumber: `ITQAN-${randomCode.toUpperCase()}`,
+      certificateNumber: certNum,
       verificationCode: randomCode,
       studentName: studentName,
       courseName: courseName,
@@ -50,7 +108,10 @@ export const CertificateManagementPage: React.FC = () => {
     setCourseName('');
   };
 
-  const handleRevoke = (id: string) => {
+  const handleRevoke = async (id: string) => {
+    if (isSupabaseConfigured()) {
+      await supabase.from('certificates').update({ status: 'revoked' }).eq('id', id);
+    }
     setCertificates(certificates.map(c => c.id === id ? { ...c, status: 'revoked' } : c));
   };
 

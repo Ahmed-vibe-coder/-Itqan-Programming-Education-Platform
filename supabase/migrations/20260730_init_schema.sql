@@ -12,11 +12,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
-    CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
-  END IF;
-END $$;
+CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
 
 CREATE TABLE IF NOT EXISTS public.user_roles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -58,14 +54,8 @@ CREATE TABLE IF NOT EXISTS public.invitations (
 );
 
 -- 3. COURSES & LESSONS
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN
-    CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN
-    CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
-  END IF;
-END $$;
+CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
+CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
 
 CREATE TABLE IF NOT EXISTS public.courses (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

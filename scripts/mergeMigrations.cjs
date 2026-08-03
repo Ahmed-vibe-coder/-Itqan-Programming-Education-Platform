@@ -30,23 +30,13 @@ for (const file of files) {
   if (fs.existsSync(filePath)) {
     let content = fs.readFileSync(filePath, 'utf8');
 
-    // Make all CREATE TYPE idempotent
-    content = content.replace(/CREATE TYPE ([a-zA-Z0-9_]+) AS ENUM \(([^)]+)\);/g, (match, typeName, values) => {
-      return `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = '${typeName}') THEN CREATE TYPE ${typeName} AS ENUM (${values}); END IF; END $$;`;
-    });
-
-    // Make all CREATE TABLE idempotent
-    content = content.replace(/CREATE TABLE public\./g, 'CREATE TABLE IF NOT EXISTS public.');
-    content = content.replace(/CREATE TABLE IF NOT EXISTS IF NOT EXISTS/g, 'CREATE TABLE IF NOT EXISTS');
-
-    // Make all CREATE INDEX idempotent
-    content = content.replace(/CREATE INDEX public\./g, 'CREATE INDEX IF NOT EXISTS public.');
-    content = content.replace(/CREATE INDEX (?!IF NOT EXISTS)/g, 'CREATE INDEX IF NOT EXISTS ');
-    content = content.replace(/CREATE INDEX IF NOT EXISTS IF NOT EXISTS/g, 'CREATE INDEX IF NOT EXISTS');
+    // Clean up any remaining DO $$ type guards if any
+    content = content.replace(/DO \$\$ BEGIN IF NOT EXISTS \(SELECT 1 FROM pg_type WHERE typname = '[^']+'\) THEN (CREATE TYPE [^;]+;); END IF; END \$\$;/g, '$1');
+    content = content.replace(/DO \$\$ BEGIN\s+IF NOT EXISTS \(SELECT 1 FROM pg_type WHERE typname = '[^']+'\) THEN\s+(CREATE TYPE [^;]+;);\s+END IF;\s+END \$\$;/g, '$1');
 
     masterSql += `-- ==========================================\n-- FILE: ${file}\n-- ==========================================\n\n` + content + '\n\n';
   }
 }
 
 fs.writeFileSync(path.join(dir, 'CONSOLIDATED_MASTER_SCHEMA.sql'), masterSql, 'utf8');
-console.log('Successfully generated clean auto-reset CONSOLIDATED_MASTER_SCHEMA.sql!');
+console.log('Successfully generated clean standard CONSOLIDATED_MASTER_SCHEMA.sql!');

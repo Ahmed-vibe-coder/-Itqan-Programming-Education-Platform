@@ -27,11 +27,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
-    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student'); END IF; END $$;
-  END IF;
-END $$;
+CREATE TYPE user_role_enum AS ENUM ('owner', 'teacher', 'student');
 
 CREATE TABLE IF NOT EXISTS public.user_roles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -73,14 +69,8 @@ CREATE TABLE IF NOT EXISTS public.invitations (
 );
 
 -- 3. COURSES & LESSONS
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN
-    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'content_status') THEN CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived'); END IF; END $$;
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN
-    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'course_subject') THEN CREATE TYPE course_subject AS ENUM ('html', 'css', 'js'); END IF; END $$;
-  END IF;
-END $$;
+CREATE TYPE content_status AS ENUM ('draft', 'published', 'archived');
+CREATE TYPE course_subject AS ENUM ('html', 'css', 'js');
 
 CREATE TABLE IF NOT EXISTS public.courses (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -94,7 +84,7 @@ CREATE TABLE IF NOT EXISTS public.courses (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.modules (
+CREATE TABLE public.modules (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   course_id UUID NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
   title_ar TEXT NOT NULL,
@@ -103,7 +93,7 @@ CREATE TABLE IF NOT EXISTS public.modules (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.lessons (
+CREATE TABLE public.lessons (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   module_id UUID NOT NULL REFERENCES public.modules(id) ON DELETE CASCADE,
   title_ar TEXT NOT NULL,
@@ -116,7 +106,7 @@ CREATE TABLE IF NOT EXISTS public.lessons (
   UNIQUE(module_id, slug)
 );
 
-CREATE TABLE IF NOT EXISTS public.lesson_blocks (
+CREATE TABLE public.lesson_blocks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
   block_type TEXT NOT NULL,
@@ -125,9 +115,9 @@ CREATE TABLE IF NOT EXISTS public.lesson_blocks (
 );
 
 -- 4. PROGRESS & WORKSPACES
-DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'progress_status') THEN CREATE TYPE progress_status AS ENUM ('locked', 'available', 'in_progress', 'awaiting_mastery', 'completed'); END IF; END $$;
+CREATE TYPE progress_status AS ENUM ('locked', 'available', 'in_progress', 'awaiting_mastery', 'completed');
 
-CREATE TABLE IF NOT EXISTS public.lesson_progress (
+CREATE TABLE public.lesson_progress (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
@@ -139,7 +129,7 @@ CREATE TABLE IF NOT EXISTS public.lesson_progress (
   UNIQUE(user_id, lesson_id)
 );
 
-CREATE TABLE IF NOT EXISTS public.code_workspaces (
+CREATE TABLE public.code_workspaces (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
@@ -151,7 +141,7 @@ CREATE TABLE IF NOT EXISTS public.code_workspaces (
 );
 
 -- 5. ASSESSMENT SYSTEM
-CREATE TABLE IF NOT EXISTS public.questions (
+CREATE TABLE public.questions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   type TEXT NOT NULL,
   prompt_ar TEXT NOT NULL,
@@ -166,7 +156,7 @@ CREATE TABLE IF NOT EXISTS public.questions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.assessments (
+CREATE TABLE public.assessments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   course_id UUID REFERENCES public.courses(id) ON DELETE CASCADE,
   module_id UUID REFERENCES public.modules(id) ON DELETE CASCADE,
@@ -178,7 +168,7 @@ CREATE TABLE IF NOT EXISTS public.assessments (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.assessment_attempts (
+CREATE TABLE public.assessment_attempts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   assessment_id UUID NOT NULL REFERENCES public.assessments(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -191,7 +181,7 @@ CREATE TABLE IF NOT EXISTS public.assessment_attempts (
 );
 
 -- 6. GAMIFICATION
-CREATE TABLE IF NOT EXISTS public.xp_transactions (
+CREATE TABLE public.xp_transactions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   points INT NOT NULL,
@@ -201,14 +191,14 @@ CREATE TABLE IF NOT EXISTS public.xp_transactions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS public.student_streaks (
+CREATE TABLE public.student_streaks (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   current_streak INT DEFAULT 1,
   longest_streak INT DEFAULT 1,
   last_activity_date DATE DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE IF NOT EXISTS public.achievement_definitions (
+CREATE TABLE public.achievement_definitions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   code TEXT UNIQUE NOT NULL,
   title_ar TEXT NOT NULL,
@@ -217,7 +207,7 @@ CREATE TABLE IF NOT EXISTS public.achievement_definitions (
   xp_reward INT DEFAULT 50
 );
 
-CREATE TABLE IF NOT EXISTS public.student_achievements (
+CREATE TABLE public.student_achievements (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   achievement_id UUID NOT NULL REFERENCES public.achievement_definitions(id) ON DELETE CASCADE,

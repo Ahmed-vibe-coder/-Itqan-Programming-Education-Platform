@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { AIQuestionImportModal } from '@/features/teacher/components/AIQuestionImportModal';
 import {
   FileCheck,
   PlusCircle,
@@ -31,6 +32,7 @@ interface QuestionBankItem {
 }
 
 export const ExamBuilderPage: React.FC = () => {
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [wizardStep, setWizardStep] = useState<number>(1);
   const [examTitle, setExamTitle] = useState('اختبار الوحدة الأولى — مفاهيم HTML الأساسية');
   const [examDescription, setExamDescription] = useState('اختبار تقييمي لقياس مدى فهم الطالب لهيكل الصفحة والوسوم الأساسية.');
@@ -83,6 +85,21 @@ export const ExamBuilderPage: React.FC = () => {
     setTimeout(() => setPublishedMsg(null), 5000);
   };
 
+  const handleImportedFromAI = (imported: any[]) => {
+    const formatted = imported.map((q, idx) => ({
+      id: q.id || `q-imported-${Date.now()}-${idx}`,
+      prompt_ar: q.prompt_ar,
+      course: q.course || 'HTML',
+      difficulty: q.difficulty || 'medium',
+      type: q.type || 'mcq',
+      points: q.points || 10
+    }));
+
+    setSelectedQuestions((prev) => [...prev, ...formatted]);
+    setPublishedMsg(`تم استيراد ${imported.length} سؤال بالذكاء الاصطناعي وإضافتهم للاختبار فوراً!`);
+    setTimeout(() => setPublishedMsg(null), 5000);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -93,13 +110,23 @@ export const ExamBuilderPage: React.FC = () => {
             <h1 className="text-xl font-extrabold text-txt-primary">منشئ الامتحانات التفاعلي (Exam Builder & Blueprint)</h1>
           </div>
           <p className="text-xs text-txt-muted mt-1">
-            بناء اختبار مخصص مباشرة من بنك الأسئلة أو باستخدام مخطط الامتحان الذكي (Exam Blueprint).
+            بناء اختبار مخصص مباشرة من بنك الأسئلة أو باستخدام استيراد الأسئلة بالذكاء الاصطناعي.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-bold font-mono bg-surface-secondary px-3 py-1.5 rounded-xl border border-bdr">
-          <Clock className="w-4 h-4 text-amber-500" />
-          <span>إجمالي النقاط: {totalPoints} | الوقت: {timeLimit} دقيقة</span>
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={() => setIsAIModalOpen(true)}
+            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-200" />
+            <span>استيراد بالذكاء الاصطناعي (AI Import)</span>
+          </button>
+
+          <div className="flex items-center gap-2 text-xs font-bold font-mono bg-surface-secondary px-3 py-2 rounded-xl border border-bdr">
+            <Clock className="w-4 h-4 text-amber-500" />
+            <span>إجمالي النقاط: {totalPoints} | الوقت: {timeLimit} دقيقة</span>
+          </div>
         </div>
       </div>
 
@@ -305,6 +332,13 @@ export const ExamBuilderPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* AI Question Batch Import Modal */}
+      <AIQuestionImportModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+        onQuestionsImported={handleImportedFromAI}
+      />
     </div>
   );
 };

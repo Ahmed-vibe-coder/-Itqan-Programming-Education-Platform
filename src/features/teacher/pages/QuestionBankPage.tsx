@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { QuestionEditorModal } from '@/features/teacher/components/QuestionEditorModal';
+import { AIQuestionImportModal } from '@/features/teacher/components/AIQuestionImportModal';
 import {
   HelpCircle,
   PlusCircle,
@@ -17,7 +18,9 @@ import {
   Bot,
   Sparkles,
   Layers,
-  ChevronDown
+  ChevronDown,
+  Upload,
+  FileJson
 } from 'lucide-react';
 
 interface QuestionItem {
@@ -36,6 +39,8 @@ interface QuestionItem {
 }
 
 export const QuestionBankPage: React.FC = () => {
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [importedAlertMsg, setImportedAlertMsg] = useState<string | null>(null);
   const [questions, setQuestions] = useState<QuestionItem[]>([
     {
       id: 'q-1',
@@ -86,14 +91,14 @@ export const QuestionBankPage: React.FC = () => {
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
 
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState<any>(null);
+  const [editingQuestion, setEditingQuestion] = useState<QuestionItem | null>(null);
   const [selectedAnalyticsQuestion, setSelectedAnalyticsQuestion] = useState<QuestionItem | null>(null);
 
   useEffect(() => {
     async function fetchQuestions() {
       setLoading(true);
       try {
-        const { data, error } = await supabase.from('questions').select('*').limit(50);
+        const { data, error } = await supabase.from('questions').select('*').order('created_at', { ascending: false });
         if (data && data.length > 0) {
           const mapped: QuestionItem[] = data.map((q: any) => ({
             id: q.id,
@@ -150,6 +155,26 @@ export const QuestionBankPage: React.FC = () => {
     setQuestions([newQ, ...questions]);
   };
 
+  const handleBatchImported = (newQuestions: any[]) => {
+    const formattedNew = newQuestions.map((q, idx) => ({
+      id: q.id || `q-imported-${Date.now()}-${idx}`,
+      type: q.type || 'mcq',
+      prompt_ar: q.prompt_ar,
+      course: q.course || 'HTML',
+      difficulty: q.difficulty || 'medium',
+      points: q.points || 10,
+      status: 'published' as const,
+      version: 1,
+      attempts_count: 0,
+      correct_percentage: 0,
+      created_at: new Date().toISOString().split('T')[0]
+    }));
+
+    setQuestions((prev) => [...formattedNew, ...prev]);
+    setImportedAlertMsg(`تم استيراد ${newQuestions.length} سؤال بنجاح وإضافتهم إلى بنك الأسئلة وقاعدة البيانات!`);
+    setTimeout(() => setImportedAlertMsg(null), 5000);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -160,11 +185,19 @@ export const QuestionBankPage: React.FC = () => {
             <h1 className="text-xl font-extrabold text-txt-primary">بنك الأسئلة الموحد (Question Bank)</h1>
           </div>
           <p className="text-xs text-txt-muted mt-1">
-            إدارة كافة الأسئلة والأنواع الـ 15 المتخصصة وتصنيفها حسب الكورس والوحدة والإصدار ومتابعة التحليلات.
+            إدارة كافة الأسئلة والأنواع الـ 15 المتخصصة وتصنيفها واستيرادها بالذكاء الاصطناعي بنقرة واحدة.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <button
+            onClick={() => setIsAIModalOpen(true)}
+            className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4 text-emerald-200" />
+            <span>استيراد بالذكاء الاصطناعي (AI JSON Import)</span>
+          </button>
+
           <button
             onClick={() => {
               setEditingQuestion(null);
@@ -173,10 +206,18 @@ export const QuestionBankPage: React.FC = () => {
             className="px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>إنشاء سؤال جديد</span>
+            <span>إنشاء سؤال يدوي</span>
           </button>
         </div>
       </div>
+
+      {/* Success Alert Banner */}
+      {importedAlertMsg && (
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+          <span>{importedAlertMsg}</span>
+        </div>
+      )}
 
       {/* Search and Multi-tier Filters Bar */}
       <div className="bg-surface border border-bdr rounded-2xl p-4 space-y-3 shadow-sm">
@@ -347,6 +388,13 @@ export const QuestionBankPage: React.FC = () => {
         onClose={() => setIsEditorOpen(false)}
         onSave={handleSaveQuestionFromModal}
         initialData={editingQuestion}
+      />
+
+      {/* AI Question Batch Import Modal */}
+      <AIQuestionImportModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+        onQuestionsImported={handleBatchImported}
       />
     </div>
   );

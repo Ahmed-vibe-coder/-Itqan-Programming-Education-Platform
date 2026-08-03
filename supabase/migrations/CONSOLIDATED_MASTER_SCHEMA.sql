@@ -2,9 +2,8 @@
 -- Generated for 1-Click Execution in Supabase SQL Editor
 
 -- ==============================================================================
--- OPTION A: FRESH CLEAN START (Recommended if you already created partial tables)
--- If you get "relation profiles already exists" or want a 100% fresh clean start,
--- UNCOMMENT the following line and run the script:
+-- OPTION A: FRESH CLEAN START (Recommended if you want a 100% clean database)
+-- Run the following line FIRST if you want to wipe all partial old tables:
 -- DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;
 -- ==============================================================================
 
@@ -93,7 +92,7 @@ CREATE TABLE IF NOT EXISTS public.courses (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.modules (
+CREATE TABLE IF NOT EXISTS public.modules (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   course_id UUID NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
   title_ar TEXT NOT NULL,
@@ -102,7 +101,7 @@ CREATE TABLE public.modules (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.lessons (
+CREATE TABLE IF NOT EXISTS public.lessons (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   module_id UUID NOT NULL REFERENCES public.modules(id) ON DELETE CASCADE,
   title_ar TEXT NOT NULL,
@@ -115,7 +114,7 @@ CREATE TABLE public.lessons (
   UNIQUE(module_id, slug)
 );
 
-CREATE TABLE public.lesson_blocks (
+CREATE TABLE IF NOT EXISTS public.lesson_blocks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
   block_type TEXT NOT NULL,
@@ -126,7 +125,7 @@ CREATE TABLE public.lesson_blocks (
 -- 4. PROGRESS & WORKSPACES
 CREATE TYPE progress_status AS ENUM ('locked', 'available', 'in_progress', 'awaiting_mastery', 'completed');
 
-CREATE TABLE public.lesson_progress (
+CREATE TABLE IF NOT EXISTS public.lesson_progress (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
@@ -138,7 +137,7 @@ CREATE TABLE public.lesson_progress (
   UNIQUE(user_id, lesson_id)
 );
 
-CREATE TABLE public.code_workspaces (
+CREATE TABLE IF NOT EXISTS public.code_workspaces (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   lesson_id UUID NOT NULL REFERENCES public.lessons(id) ON DELETE CASCADE,
@@ -150,7 +149,7 @@ CREATE TABLE public.code_workspaces (
 );
 
 -- 5. ASSESSMENT SYSTEM
-CREATE TABLE public.questions (
+CREATE TABLE IF NOT EXISTS public.questions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   type TEXT NOT NULL,
   prompt_ar TEXT NOT NULL,
@@ -165,7 +164,7 @@ CREATE TABLE public.questions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.assessments (
+CREATE TABLE IF NOT EXISTS public.assessments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   course_id UUID REFERENCES public.courses(id) ON DELETE CASCADE,
   module_id UUID REFERENCES public.modules(id) ON DELETE CASCADE,
@@ -177,7 +176,7 @@ CREATE TABLE public.assessments (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.assessment_attempts (
+CREATE TABLE IF NOT EXISTS public.assessment_attempts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   assessment_id UUID NOT NULL REFERENCES public.assessments(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -190,7 +189,7 @@ CREATE TABLE public.assessment_attempts (
 );
 
 -- 6. GAMIFICATION
-CREATE TABLE public.xp_transactions (
+CREATE TABLE IF NOT EXISTS public.xp_transactions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   points INT NOT NULL,
@@ -200,14 +199,14 @@ CREATE TABLE public.xp_transactions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE public.student_streaks (
+CREATE TABLE IF NOT EXISTS public.student_streaks (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   current_streak INT DEFAULT 1,
   longest_streak INT DEFAULT 1,
   last_activity_date DATE DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE public.achievement_definitions (
+CREATE TABLE IF NOT EXISTS public.achievement_definitions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   code TEXT UNIQUE NOT NULL,
   title_ar TEXT NOT NULL,
@@ -216,7 +215,7 @@ CREATE TABLE public.achievement_definitions (
   xp_reward INT DEFAULT 50
 );
 
-CREATE TABLE public.student_achievements (
+CREATE TABLE IF NOT EXISTS public.student_achievements (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   achievement_id UUID NOT NULL REFERENCES public.achievement_definitions(id) ON DELETE CASCADE,

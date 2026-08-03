@@ -14,16 +14,32 @@ const files = [
 
 let masterSql = `-- CONSOLIDATED MASTER SCHEMA FOR ITQAN PLATFORM
 -- Generated for 1-Click Execution in Supabase SQL Editor
--- Total Migrations Merged: ${files.length}
+
+-- ==============================================================================
+-- OPTION A: FRESH CLEAN START (Recommended if you want a 100% clean database)
+-- Run the following line FIRST if you want to wipe all partial old tables:
+-- DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;
+-- ==============================================================================
 
 `;
 
 for (const file of files) {
   const filePath = path.join(dir, file);
   if (fs.existsSync(filePath)) {
-    masterSql += `-- ==========================================\n-- FILE: ${file}\n-- ==========================================\n\n` + fs.readFileSync(filePath, 'utf8') + '\n\n';
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    // Make all CREATE TABLE idempotent
+    content = content.replace(/CREATE TABLE public\./g, 'CREATE TABLE IF NOT EXISTS public.');
+    content = content.replace(/CREATE TABLE IF NOT EXISTS IF NOT EXISTS/g, 'CREATE TABLE IF NOT EXISTS');
+
+    // Make all CREATE INDEX idempotent
+    content = content.replace(/CREATE INDEX public\./g, 'CREATE INDEX IF NOT EXISTS public.');
+    content = content.replace(/CREATE INDEX (?!IF NOT EXISTS)/g, 'CREATE INDEX IF NOT EXISTS ');
+    content = content.replace(/CREATE INDEX IF NOT EXISTS IF NOT EXISTS/g, 'CREATE INDEX IF NOT EXISTS');
+
+    masterSql += `-- ==========================================\n-- FILE: ${file}\n-- ==========================================\n\n` + content + '\n\n';
   }
 }
 
 fs.writeFileSync(path.join(dir, 'CONSOLIDATED_MASTER_SCHEMA.sql'), masterSql, 'utf8');
-console.log('Successfully generated CONSOLIDATED_MASTER_SCHEMA.sql!');
+console.log('Successfully generated resilient CONSOLIDATED_MASTER_SCHEMA.sql!');

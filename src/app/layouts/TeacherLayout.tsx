@@ -151,7 +151,7 @@ export const TeacherLayout: React.FC = () => {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs transition-all ${
                 isActive
-                  ? 'bg-brand-primary text-white shadow-sm'
+                  ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/20'
                   : 'text-txt-secondary hover:text-txt-primary hover:bg-surface-secondary'
               } ${sidebarCollapsed ? 'justify-center px-0' : ''}`
             }
@@ -168,7 +168,7 @@ export const TeacherLayout: React.FC = () => {
               {!sidebarCollapsed ? (
                 <button
                   onClick={() => toggleGroup(group.title)}
-                  className="w-full flex items-center justify-between px-2 py-1 text-[11px] font-extrabold text-txt-muted uppercase tracking-wider hover:text-txt-primary"
+                  className="w-full flex items-center justify-between px-2 py-1 text-[11px] font-extrabold text-txt-muted uppercase tracking-wider hover:text-txt-primary transition-colors"
                 >
                   <span>{group.title}</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openGroups[group.title] ? '' : '-rotate-90'}`} />
@@ -189,7 +189,7 @@ export const TeacherLayout: React.FC = () => {
                         className={({ isActive }) =>
                           `flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                             isActive
-                              ? 'bg-brand-primary/10 text-brand-primary font-bold'
+                              ? 'bg-brand-primary/10 text-brand-primary font-bold border border-brand-primary/20'
                               : 'text-txt-secondary hover:text-txt-primary hover:bg-surface-secondary'
                           } ${sidebarCollapsed ? 'justify-center px-0' : ''}`
                         }

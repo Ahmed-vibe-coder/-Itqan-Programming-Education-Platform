@@ -21,7 +21,7 @@ interface AIQuestionImportModalProps {
   onQuestionsImported: (newQuestions: any[]) => void;
 }
 
-export const AI_PROMPT_TEMPLATE = `أنت خبير في بناء المناهج والأسئلة التفاعلية لمنصة "إتقان - Itqan" لتعليم البرمجة للأطفال والناشئين (10-15 سنة).
+export const AI_PROMPT_TEMPLATE = `أنت خبير في بناء المناهج والأسئلة التفاعلية لمنصة "إتقان - Itqan" لتعليم البرمجة وتطوير الويب لجميع المستويات.
 المطلوب منك إعداد قائمة أسئلة برمجية في لغات (HTML, CSS, JavaScript) بصيغة JSON دقيقة ومطابقة تماماً للهيكل التالي دون كتابة أي نصوص خارج مصفوفة JSON:
 
 [
@@ -74,7 +74,7 @@ export const AI_PROMPT_TEMPLATE = `أنت خبير في بناء المناهج 
 شروط هامة:
 1. "type" يجب أن يكون أحد الأنواع التالية فقط: "mcq", "true_false", "ordering", "code_output", "fill_blank".
 2. "difficulty" تكون: "easy", "medium", "hard".
-3. الإجابة بالعربية الفصحى البسيطة والمشجعة للأطفال.
+3. الإجابة بالعربية الفصحى البسيطة والواضحة لجميع المتعلمين.
 4. أخرج مصفوفة JSON المباشرة فقط بدون أي مقدمات أو شروحات جانبية.`;
 
 export const SAMPLE_JSON_TEMPLATE = [

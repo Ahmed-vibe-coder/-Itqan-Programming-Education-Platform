@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Logo } from '@/components/shared/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { LogIn, User, Lock, AlertCircle, KeyRound } from 'lucide-react';
+import { LogIn, User, Lock, AlertCircle, KeyRound, Eye, EyeOff } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { UserRole } from '@/types/database';
 
@@ -13,6 +13,7 @@ export const LoginPage: React.FC = () => {
 
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,7 +82,7 @@ export const LoginPage: React.FC = () => {
       } else {
         // Safe interactive demo login logic
         let detectedRole: UserRole = 'student';
-        let mockName = 'طالب نواة';
+        let mockName = 'طالب إتقان';
 
         if (usernameOrEmail.toLowerCase().includes('teacher') || usernameOrEmail.toLowerCase().includes('owner')) {
           detectedRole = 'teacher';
@@ -123,10 +124,10 @@ export const LoginPage: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-md mx-auto w-full my-auto py-8">
-        <div className="bg-surface border border-bdr rounded-2xl p-6 md:p-8 shadow-sm">
+        <div className="bg-surface border border-bdr rounded-2xl p-6 md:p-8 shadow-md">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-brand-primary">
+            <div className="w-14 h-14 bg-brand-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-brand-primary border border-brand-primary/20">
               <LogIn className="w-7 h-7" />
             </div>
             <h1 className="text-2xl font-bold text-txt-primary mb-2">تسجيل الدخول</h1>
@@ -170,14 +171,14 @@ export const LoginPage: React.FC = () => {
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs text-brand-primary hover:underline font-medium"
+                  className="text-xs text-brand-primary hover:underline font-bold"
                 >
                   نسيت كلمة المرور؟
                 </Link>
               </div>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -185,14 +186,20 @@ export const LoginPage: React.FC = () => {
                   dir="ltr"
                   className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-3 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 focus:border-brand-primary pl-10 text-left"
                 />
-                <Lock className="w-4 h-4 text-txt-muted absolute left-3 top-3.5" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute left-3 top-3.5 text-txt-muted hover:text-txt-primary transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-active text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2 mt-6 disabled:opacity-50"
+              className="min-h-[44px] w-full bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-active text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-6 disabled:opacity-50"
             >
               {loading ? (
                 <>

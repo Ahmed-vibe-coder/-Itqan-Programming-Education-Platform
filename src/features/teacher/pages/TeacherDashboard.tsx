@@ -112,31 +112,31 @@ export const TeacherDashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-brand-primary/10 via-surface to-brand-accent/5 p-6 rounded-3xl border border-brand-primary/20 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-[#6D3DEB]/15 via-surface to-[#FF6B5E]/10 p-6 rounded-3xl border border-[#6D3DEB]/25 shadow-md">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="w-5 h-5 text-brand-primary" />
             <h1 className="text-2xl font-extrabold text-txt-primary">مركز قيادة إتقان — الإدارة والتعليم</h1>
           </div>
-          <p className="text-xs text-txt-muted">
-            المنظومة التفاعلية لمتابعة إنجاز الطلاب، إدارة بنك الأسئلة، بناء الامتحانات وتصحيح المشاريع.
+          <p className="text-xs text-txt-muted leading-relaxed">
+            المنظومة التفاعلية الشاملة لمتابعة إنجاز الطلاب، إدارة بنك الأسئلة، بناء الامتحانات وتصحيح المشاريع.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Link
             to="/teacher/questions/new"
-            className="px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5"
+            className="min-h-[44px] px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-2 shrink-0"
           >
             <PlusCircle className="w-4 h-4" />
             <span>إنشاء سؤال جديد</span>
           </Link>
           <Link
             to="/teacher/questions/ai"
-            className="px-4 py-2.5 bg-surface-secondary border border-brand-primary/30 text-brand-primary hover:bg-brand-primary/5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5"
+            className="min-h-[44px] px-4 py-2.5 bg-surface border border-brand-primary/30 text-brand-primary hover:bg-brand-primary/10 text-xs font-bold rounded-xl transition-all flex items-center gap-2 shrink-0 shadow-sm"
           >
             <Bot className="w-4 h-4 text-brand-primary" />
-            <span>الذكاء الاصطناعي</span>
+            <span>توليد بالـ AI</span>
           </Link>
         </div>
       </div>

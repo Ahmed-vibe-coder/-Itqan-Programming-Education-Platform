@@ -68,7 +68,7 @@ _نواة كود — nawa-code | البيئة التعليمية الذكية ل
 رمز التوثيق الرقمي: ${data.verificationCode || 'NAWA-CERT-2026'}
 
 ------------------------
-منصة نواة كود لتعليم البرمجة للناشئين
+منصة إتقان لتعليم البرمجة وتطوير الويب
     `.trim();
 
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });

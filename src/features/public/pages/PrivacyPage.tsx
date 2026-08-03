@@ -19,7 +19,7 @@ export const PrivacyPage: React.FC = () => {
             <h1>سياسة الخصوصية وحماية بيانات الطلاب</h1>
           </div>
           <p className="text-xs text-txt-secondary leading-relaxed">
-            منصة "إتقان" هي بيئة تعليمية خاصة ومغلقة تلتزم بأعلى معايير حماية خصوصية الطلاب والناشئين من سن 10 إلى 15 سنة.
+            منصة "إتقان" هي بيئة تعليمية خاصة ومغلقة تلتزم بأعلى معايير حماية خصوصية المتعلمين والمستخدمين.
           </p>
           <ul className="space-y-2 text-xs text-txt-muted list-disc list-inside leading-relaxed">
             <li>لا يتم الإفصاح عن البريد الإلكتروني أو بيانات التواصل مع أي طرف ثالث أو طلاب آخرين.</li>

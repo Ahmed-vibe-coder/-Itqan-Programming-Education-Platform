@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileCheck, Check, Sparkles, User, AlertCircle } from 'lucide-react';
+import { FileCheck, Check, Sparkles, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export const GradingQueuePage: React.FC = () => {
   const [items, setItems] = useState([
@@ -15,9 +15,13 @@ export const GradingQueuePage: React.FC = () => {
     },
   ]);
 
+  const [gradedSuccessMsg, setGradedSuccessMsg] = useState<string | null>(null);
+
   const handleGrade = (id: string) => {
-    alert('تم اعتماد الدرجة الممنوحة والتحديث سحابياً!');
+    const item = items.find(i => i.id === id);
     setItems(items.filter((item) => item.id !== id));
+    setGradedSuccessMsg(`تم اعتماد درجات الطالب ${item?.studentName || ''} بنجاح والتحديث سحابياً!`);
+    setTimeout(() => setGradedSuccessMsg(null), 4000);
   };
 
   return (
@@ -29,9 +33,18 @@ export const GradingQueuePage: React.FC = () => {
         </div>
       </div>
 
+      {gradedSuccessMsg && (
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+          <span>{gradedSuccessMsg}</span>
+        </div>
+      )}
+
       {items.length === 0 ? (
-        <div className="text-center py-12 bg-surface border border-bdr rounded-2xl p-6">
-          <p className="text-sm text-txt-muted">طابور التصحيح اليدوي فارغ حالياً! جميع الإجابات جرى تقييمها.</p>
+        <div className="text-center py-12 bg-surface border border-bdr rounded-2xl p-6 shadow-sm space-y-2">
+          <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto" />
+          <p className="text-sm font-bold text-txt-primary">طابور التصحيح اليدوي فارغ حالياً!</p>
+          <p className="text-xs text-txt-muted">جميع إجابات الطلاب التفاعلية جرى تقييمها واعتماد درجاتها.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -66,7 +79,7 @@ export const GradingQueuePage: React.FC = () => {
 
                 <button
                   onClick={() => handleGrade(item.id)}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
                 >
                   <Check className="w-4 h-4" />
                   <span>اعتماد الدرجة وإرسال الملاحظات</span>
@@ -79,3 +92,4 @@ export const GradingQueuePage: React.FC = () => {
     </div>
   );
 };
+

@@ -19,7 +19,7 @@ export const AIAssistantPage: React.FC = () => {
   const [course, setCourse] = useState('html');
   const [module, setModule] = useState('الموديل الأول');
   const [lesson, setLesson] = useState('هيكل صفحة HTML');
-  const [ageLevel, setAgeLevel] = useState(12);
+  const [skillLevel, setSkillLevel] = useState('مبتدئ');
   const [difficulty, setDifficulty] = useState('medium');
   const [questionType, setQuestionType] = useState('single_choice');
   const [count, setCount] = useState(3);
@@ -40,7 +40,7 @@ export const AIAssistantPage: React.FC = () => {
           course,
           module,
           lesson,
-          ageLevel,
+          skillLevel,
           difficulty,
           questionType,
           count,
@@ -103,7 +103,7 @@ export const AIAssistantPage: React.FC = () => {
             <h1 className="text-xl font-extrabold text-txt-primary font-mono">مساعد المعلم بالذكاء الاصطناعي (AI Question Generator)</h1>
           </div>
           <p className="text-xs text-txt-muted mt-1">
-            توليد أسئلة تفاعلية ومناسبة للفئة العمرية (10-15 سنة) ومحفوظة كمسودات (Drafts) فقط مراجعة المعلم.
+            توليد أسئلة تفاعلية ومناسبة لمختلف مستويات التعلّم ومحفوظة كمسودات (Drafts) لمراجعة المعلم.
           </p>
         </div>
 
@@ -138,15 +138,16 @@ export const AIAssistantPage: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-bold text-txt-secondary mb-1">العمر الاستهدافي</label>
-                <input
-                  type="number"
-                  min={10}
-                  max={15}
-                  value={ageLevel}
-                  onChange={(e) => setAgeLevel(Number(e.target.value))}
+                <label className="block text-xs font-bold text-txt-secondary mb-1">مستوى التعلّم</label>
+                <select
+                  value={skillLevel}
+                  onChange={(e) => setSkillLevel(e.target.value)}
                   className="w-full bg-surface-secondary border border-bdr rounded-xl p-2 text-xs text-txt-primary"
-                />
+                >
+                  <option value="مبتدئ">مبتدئ</option>
+                  <option value="متوسط">متوسط</option>
+                  <option value="متقدم">متقدم</option>
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold text-txt-secondary mb-1">عدد الأسئلة</label>
@@ -167,7 +168,7 @@ export const AIAssistantPage: React.FC = () => {
                 rows={3}
                 value={promptInstructions}
                 onChange={(e) => setPromptInstructions(e.target.value)}
-                placeholder="أنشئ 3 أسئلة اختيار من متعدد لدرس هيكل صفحة HTML تناسب عمر 11 سنة مع الشرح..."
+                placeholder="أنشئ 3 أسئلة اختيار من متعدد لدرس هيكل صفحة HTML لمستوى المبتدئين مع الشرح..."
                 className="w-full bg-surface-secondary border border-bdr rounded-xl p-2.5 text-xs text-txt-primary"
               />
             </div>

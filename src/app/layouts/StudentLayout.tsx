@@ -80,7 +80,7 @@ export const StudentLayout: React.FC = () => {
           </NavLink>
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-1.5 rounded-lg border border-bdr text-txt-muted hover:text-txt-primary hover:bg-surface-secondary"
+            className="p-1.5 rounded-lg border border-bdr text-txt-muted hover:text-txt-primary hover:bg-surface-secondary transition-colors"
             title={sidebarCollapsed ? 'توسيع القائمة' : 'طوي القائمة'}
           >
             {sidebarCollapsed ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -98,7 +98,7 @@ export const StudentLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs transition-all ${
                     isActive
-                      ? 'bg-brand-primary text-white shadow-sm'
+                      ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/20'
                       : 'text-txt-secondary hover:text-txt-primary hover:bg-surface-secondary'
                   } ${sidebarCollapsed ? 'justify-center px-0' : ''}`
                 }
@@ -113,7 +113,7 @@ export const StudentLayout: React.FC = () => {
 
         <div className="p-3 border-t border-bdr bg-surface-secondary/50">
           <div className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-9 h-9 rounded-xl bg-brand-primary/10 text-brand-primary font-bold flex items-center justify-center text-sm shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-brand-primary/10 text-brand-primary font-bold flex items-center justify-center text-sm shrink-0 border border-brand-primary/20">
               🦅
             </div>
             {!sidebarCollapsed && (

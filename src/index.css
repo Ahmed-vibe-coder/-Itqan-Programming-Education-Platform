@@ -3,47 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --brand-primary: #4355E8;
-  --brand-primary-hover: #3443C8;
-  --brand-primary-active: #2936A8;
-  --brand-secondary: #0E9F9A;
-  --brand-accent: #F9734F;
+  --brand-primary: #6D3DEB;
+  --brand-primary-hover: #5B2FD1;
+  --brand-primary-active: #4A22B0;
+  --brand-secondary: #FF6B5E;
+  --brand-accent: #F5B942;
+  --brand-teal: #14A6A1;
 
-  --course-html: #F97316;
-  --course-css: #2563EB;
-  --course-js: #EAB308;
+  --course-html: #FF6B5E;
+  --course-css: #6D3DEB;
+  --course-js: #F5B942;
 
-  --background: #F5F7FB;
-  --background-subtle: #EEF2F7;
+  --background: #F8F8FC;
+  --background-subtle: #F2F1F8;
   --surface: #FFFFFF;
-  --surface-secondary: #F8FAFC;
+  --surface-secondary: #F2F1F8;
   --surface-elevated: #FFFFFF;
-  --text-primary: #101828;
-  --text-secondary: #344054;
-  --text-muted: #667085;
-  --border: #D8E0EA;
-  --border-strong: #AAB6C5;
-  --success: #15803D;
-  --warning: #B45309;
-  --danger: #C62828;
-  --info: #0369A1;
+  --text-primary: #17151F;
+  --text-secondary: #5F5A6B;
+  --text-muted: #898493;
+  --border: #E5E2EC;
+  --border-strong: #CBD5E1;
+  --success: #10B981;
+  --warning: #F5B942;
+  --danger: #FF6B5E;
+  --info: #14A6A1;
 }
 
 .dark {
-  --background: #07111F;
-  --background-subtle: #0A1626;
-  --surface: #0F1D2E;
-  --surface-secondary: #13243A;
-  --surface-elevated: #182B43;
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --border: #293B52;
-  --border-strong: #41566F;
-  --success: #4ADE80;
-  --warning: #FBBF24;
-  --danger: #F87171;
-  --info: #38BDF8;
+  --brand-primary: #6D3DEB;
+  --brand-primary-hover: #8358F5;
+  --brand-primary-active: #5B2FD1;
+  --brand-secondary: #FF6B5E;
+  --brand-accent: #F5B942;
+  --brand-teal: #14A6A1;
+
+  --background: #11101A;
+  --background-subtle: #181622;
+  --surface: #201D2B;
+  --surface-secondary: #181622;
+  --surface-elevated: #292536;
+  --text-primary: #FAF9FC;
+  --text-secondary: #D1CDDA;
+  --text-muted: #9D97A8;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --success: #34D399;
+  --warning: #F5B942;
+  --danger: #FF6B5E;
+  --info: #14A6A1;
 }
 
 /* Mandatory Code Blocks & Editors LTR rule */

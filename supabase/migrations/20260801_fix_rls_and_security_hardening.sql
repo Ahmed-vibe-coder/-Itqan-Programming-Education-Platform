@@ -273,7 +273,7 @@ CREATE POLICY "Teachers manage templates" ON public.certificate_templates FOR AL
 DROP POLICY IF EXISTS "Public verify active certificates" ON public.certificates;
 DROP POLICY IF EXISTS "Teachers full access certificates" ON public.certificates;
 DROP POLICY IF EXISTS "Students read own certificates" ON public.certificates;
-CREATE POLICY "Students read own certificates" ON public.certificates FOR SELECT USING (auth.uid() = user_id OR auth.uid() = student_id OR status = 'active' OR public.is_teacher_or_owner(auth.uid()));
+CREATE POLICY "Students read own certificates" ON public.certificates FOR SELECT USING (auth.uid() = student_id OR status = 'active' OR public.is_teacher_or_owner(auth.uid()));
 CREATE POLICY "Teachers full access certificates" ON public.certificates FOR ALL USING (public.is_teacher_or_owner(auth.uid()));
 
 DROP POLICY IF EXISTS "Teachers view verification logs" ON public.certificate_verification_logs;

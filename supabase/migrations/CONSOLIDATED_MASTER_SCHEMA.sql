@@ -1,11 +1,13 @@
--- CONSOLIDATED MASTER SCHEMA FOR ITQAN PLATFORM
--- Generated for 1-Click Execution in Supabase SQL Editor
+-- ==============================================================================
+-- AUTOMATIC CLEAN RESET & MASTER SCHEMA FOR ITQAN PLATFORM
+-- This script automatically wipes all old partial tables/types and recreates
+-- the entire fresh production database schema from scratch in 1-Click!
+-- ==============================================================================
 
--- ==============================================================================
--- OPTION A: FRESH CLEAN START (Recommended if you want a 100% clean database)
--- Run the following line FIRST if you want to wipe all partial old tables:
--- DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;
--- ==============================================================================
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
 
 -- ==========================================
 -- FILE: 20260730_init_schema.sql

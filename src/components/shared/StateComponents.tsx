@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertCircle, Inbox, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface LoadingSkeletonProps {
   type?: 'card' | 'table' | 'text' | 'list';
@@ -57,7 +58,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
       {items.map((_, i) => (
         <div
           key={i}
-          className="bg-surface border border-bdr rounded-2xl p-6 space-y-4 animate-pulse shadow-sm"
+          className="bg-card border border-bdr rounded-itqan-card p-6 space-y-4 animate-pulse shadow-sm"
         >
           <div className="flex items-center justify-between">
             <div className="w-12 h-12 rounded-2xl bg-surface-secondary" />
@@ -70,7 +71,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
           </div>
           <div className="pt-4 border-t border-bdr flex justify-between items-center">
             <div className="w-20 h-4 bg-surface-secondary rounded" />
-            <div className="w-24 h-9 bg-brand-primary/20 rounded-xl" />
+            <div className="w-24 h-9 bg-orange-500/20 rounded-xl" />
           </div>
         </div>
       ))}
@@ -96,20 +97,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`bg-surface border border-bdr rounded-2xl p-8 sm:p-12 text-center max-w-lg mx-auto ${className}`}>
-      <div className="w-16 h-16 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-4 border border-brand-primary/20">
+    <div className={`bg-card border border-bdr rounded-itqan-card p-8 sm:p-12 text-center max-w-lg mx-auto shadow-sm ${className}`}>
+      <div className="w-16 h-16 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center mx-auto mb-4 border border-orange-500/20 shadow-itqan-glow">
         <Icon className="w-8 h-8" />
       </div>
-      <h3 className="text-xl font-bold text-txt-primary mb-2">{title}</h3>
+      <h3 className="text-xl font-extrabold text-txt-primary mb-2">{title}</h3>
       {description && <p className="text-sm text-txt-muted leading-relaxed mb-6">{description}</p>}
       {actionLabel && onAction && (
-        <button
-          type="button"
-          onClick={onAction}
-          className="min-h-[44px] px-6 py-2.5 text-sm font-bold text-white bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-active rounded-xl shadow-md transition-all inline-flex items-center gap-2"
-        >
-          <span>{actionLabel}</span>
-        </button>
+        <Button onClick={onAction} variant="primary" size="md">
+          {actionLabel}
+        </Button>
       )}
     </div>
   );
@@ -129,21 +126,16 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`bg-red-500/10 border border-red-500/30 rounded-2xl p-6 sm:p-8 text-center max-w-lg mx-auto ${className}`}>
+    <div className={`bg-red-500/10 border border-red-500/30 rounded-itqan-card p-6 sm:p-8 text-center max-w-lg mx-auto ${className}`}>
       <div className="w-12 h-12 rounded-xl bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-4">
         <AlertCircle className="w-6 h-6" />
       </div>
-      <h3 className="text-lg font-bold text-red-600 dark:text-red-400 mb-2">{title}</h3>
+      <h3 className="text-lg font-extrabold text-red-600 dark:text-red-400 mb-2">{title}</h3>
       <p className="text-sm text-txt-secondary mb-6 leading-relaxed">{message}</p>
       {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="min-h-[44px] px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-500 rounded-xl shadow-sm transition-all inline-flex items-center gap-2"
-        >
-          <RefreshCw className="w-4 h-4" />
-          <span>إعادة المحاولة</span>
-        </button>
+        <Button onClick={onRetry} variant="danger" size="md" leftIcon={<RefreshCw className="w-4 h-4" />}>
+          إعادة المحاولة
+        </Button>
       )}
     </div>
   );
@@ -166,13 +158,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 }) => {
   return (
     <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 ${className}`}>
-      <div className="space-y-1">
+      <div className="space-y-1 text-right">
         {badge && (
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-brand-primary/10 text-brand-primary border border-brand-primary/20 mb-1">
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-orange-500/10 text-orange-500 border border-orange-500/20 mb-1">
             {badge}
           </span>
         )}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-txt-primary tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-txt-primary tracking-tight">
           {title}
         </h1>
         {subtitle && <p className="text-sm sm:text-base text-txt-secondary leading-relaxed max-w-3xl">{subtitle}</p>}
@@ -201,37 +193,37 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 }) => {
   const colors = {
     primary: {
-      bg: 'bg-brand-primary/10',
-      text: 'text-brand-primary',
-      border: 'hover:border-brand-primary/40',
+      bg: 'bg-orange-500/10',
+      text: 'text-orange-500',
+      border: 'hover:border-orange-500/40',
     },
     secondary: {
-      bg: 'bg-brand-secondary/10',
-      text: 'text-brand-secondary',
-      border: 'hover:border-brand-secondary/40',
+      bg: 'bg-blue-500/10',
+      text: 'text-blue-500',
+      border: 'hover:border-blue-500/40',
     },
     teal: {
-      bg: 'bg-[#14A6A1]/10',
-      text: 'text-[#14A6A1]',
-      border: 'hover:border-[#14A6A1]/40',
+      bg: 'bg-emerald-500/10',
+      text: 'text-emerald-500',
+      border: 'hover:border-emerald-500/40',
     },
     gold: {
-      bg: 'bg-brand-accent/10',
-      text: 'text-brand-accent',
-      border: 'hover:border-brand-accent/40',
+      bg: 'bg-amber-500/10',
+      text: 'text-amber-500',
+      border: 'hover:border-amber-500/40',
     },
   };
 
   const style = colors[color];
 
   return (
-    <div className={`bg-surface border border-bdr ${style.border} p-5 rounded-2xl transition-all shadow-sm flex items-center justify-between gap-4 ${className}`}>
-      <div>
-        <span className="text-xs font-semibold text-txt-muted block mb-1">{title}</span>
-        <span className="text-2xl sm:text-3xl font-extrabold text-txt-primary font-mono">{value}</span>
+    <div className={`bg-card border border-bdr ${style.border} p-5 rounded-itqan-card transition-all shadow-sm flex items-center justify-between gap-4 ${className}`}>
+      <div className="text-right">
+        <span className="text-xs font-extrabold text-txt-muted block mb-1">{title}</span>
+        <span className="text-2xl sm:text-3xl font-black text-txt-primary font-mono">{value}</span>
         {subtitle && <span className="text-[11px] text-txt-muted block mt-1">{subtitle}</span>}
       </div>
-      <div className={`w-12 h-12 rounded-xl ${style.bg} ${style.text} flex items-center justify-center shrink-0 border border-white/5`}>
+      <div className={`w-12 h-12 rounded-2xl ${style.bg} ${style.text} flex items-center justify-center shrink-0 border border-white/5`}>
         <Icon className="w-6 h-6" />
       </div>
     </div>
@@ -254,7 +246,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, label, classNa
   };
 
   const displayLabel = label || status;
-  const badgeStyle = styles[status] || 'bg-brand-primary/10 text-brand-primary border-brand-primary/20';
+  const badgeStyle = styles[status] || 'bg-orange-500/10 text-orange-500 border-orange-500/20';
 
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border ${badgeStyle} ${className}`}>

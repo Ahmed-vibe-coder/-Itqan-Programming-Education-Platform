@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Clock, Bookmark, ArrowRight, ArrowLeft, Send, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 
 export const ExamPage: React.FC = () => {
   const { assessmentId } = useParams<{ assessmentId: string }>();
@@ -102,22 +105,22 @@ export const ExamPage: React.FC = () => {
   const currentQ = questions[currentIdx];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 text-right">
       {/* Sticky Header Bar */}
-      <div className="bg-surface border border-bdr rounded-2xl p-4 flex items-center justify-between sticky top-20 z-20 shadow-sm">
+      <Card variant="default" padding="sm" className="flex items-center justify-between sticky top-20 z-20 shadow-sm border-orange-500/20">
         <div className="flex items-center gap-3">
-          <span className="font-bold text-sm text-txt-primary">امتحان HTML والأساسيات</span>
-          <span className="text-xs text-txt-muted">
+          <span className="font-black text-sm text-txt-primary">امتحان HTML والأساسيات</span>
+          <span className="text-xs text-txt-muted font-bold">
             سؤال {currentIdx + 1} من أصل {questions.length}
           </span>
         </div>
 
         {/* Timer Bar */}
-        <div className="flex items-center gap-2 px-4 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-mono font-bold text-sm">
+        <div className="flex items-center gap-2 px-4 py-1.5 rounded-itqan-btn bg-orange-500/10 border border-orange-500/30 text-orange-500 font-mono font-black text-sm">
           <Clock className="w-4 h-4 animate-pulse" />
           <span>{formatTimer(timeLeftSeconds)}</span>
         </div>
-      </div>
+      </Card>
 
       {/* Question Navigator Grid */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -130,12 +133,12 @@ export const ExamPage: React.FC = () => {
             <button
               key={q.id}
               onClick={() => setCurrentIdx(idx)}
-              className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative shrink-0 ${
+              className={`w-10 h-10 rounded-itqan-btn text-xs font-black transition-all relative shrink-0 ${
                 isCurrent
-                  ? 'bg-brand-primary text-white ring-2 ring-brand-primary/40 scale-105'
+                  ? 'bg-orange-500 text-white ring-2 ring-orange-500/40 scale-105 shadow-sm'
                   : isAnswered
-                  ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/30'
-                  : 'bg-surface border border-bdr text-txt-muted hover:border-bdr-strong'
+                  ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30'
+                  : 'bg-surface border border-bdr text-txt-muted hover:border-orange-500/40'
               }`}
             >
               {idx + 1}
@@ -148,16 +151,16 @@ export const ExamPage: React.FC = () => {
       </div>
 
       {/* Main Question Surface */}
-      <div className="bg-surface border border-bdr rounded-3xl p-6 md:p-8 space-y-6 shadow-sm">
+      <Card variant="default" padding="lg" className="space-y-6">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-lg md:text-xl font-bold text-txt-primary leading-relaxed">
+          <h2 className="text-lg md:text-xl font-black text-txt-primary leading-relaxed">
             {currentQ.prompt}
           </h2>
           <button
             onClick={() => toggleReview(currentQ.id)}
-            className={`p-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 ${
+            className={`p-2 rounded-itqan-btn border text-xs font-black flex items-center gap-1.5 transition-all shrink-0 ${
               markedForReview[currentQ.id]
-                ? 'bg-amber-500/10 border-amber-500 text-amber-600'
+                ? 'bg-amber-500/10 border-amber-500 text-amber-500'
                 : 'border-bdr text-txt-muted hover:text-txt-primary'
             }`}
           >
@@ -181,10 +184,10 @@ export const ExamPage: React.FC = () => {
               <button
                 key={opt.id}
                 onClick={() => handleSelectOption(currentQ.id, opt.id)}
-                className={`w-full p-4 rounded-2xl border text-right text-sm transition-all flex items-center justify-between ${
+                className={`w-full p-4 rounded-itqan-btn border text-right text-sm font-bold transition-all flex items-center justify-between ${
                   isSelected
-                    ? 'border-brand-primary bg-brand-primary/10 text-brand-primary font-bold shadow-sm'
-                    : 'border-bdr bg-surface-secondary hover:border-bdr-strong text-txt-primary'
+                    ? 'border-orange-500 bg-orange-500/10 text-orange-500 shadow-sm'
+                    : 'border-bdr bg-surface-secondary hover:border-orange-500/40 text-txt-primary'
                 }`}
               >
                 <span className={opt.code ? 'font-mono' : ''} dir={opt.code ? 'ltr' : undefined}>
@@ -192,7 +195,7 @@ export const ExamPage: React.FC = () => {
                 </span>
                 <div
                   className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                    isSelected ? 'border-brand-primary bg-brand-primary text-white' : 'border-bdr'
+                    isSelected ? 'border-orange-500 bg-orange-500 text-white' : 'border-bdr'
                   }`}
                 >
                   {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
@@ -201,36 +204,39 @@ export const ExamPage: React.FC = () => {
             );
           })}
         </div>
-      </div>
+      </Card>
 
       {/* Control Buttons */}
       <div className="flex items-center justify-between pt-2">
-        <button
+        <Button
           disabled={currentIdx === 0}
           onClick={() => setCurrentIdx((prev) => prev - 1)}
-          className="px-5 py-2.5 rounded-xl border border-bdr text-txt-secondary hover:text-txt-primary text-xs font-bold disabled:opacity-40 flex items-center gap-2"
+          variant="secondary"
+          size="md"
+          leftIcon={<ArrowRight className="w-4 h-4" />}
         >
-          <ArrowRight className="w-4 h-4" />
-          <span>السؤال السابق</span>
-        </button>
+          السؤال السابق
+        </Button>
 
         {currentIdx < questions.length - 1 ? (
-          <button
+          <Button
             onClick={() => setCurrentIdx((prev) => prev + 1)}
-            className="px-6 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl flex items-center gap-2"
+            variant="primary"
+            size="md"
+            rightIcon={<ArrowLeft className="w-4 h-4" />}
           >
-            <span>السؤال التالي</span>
-            <ArrowLeft className="w-4 h-4" />
-          </button>
+            السؤال التالي
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={handleSubmitExam}
-            disabled={submitting}
-            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-md flex items-center gap-2 disabled:opacity-50"
+            isLoading={submitting}
+            variant="primary"
+            size="lg"
+            leftIcon={<Send className="w-4 h-4" />}
           >
-            <Send className="w-4 h-4" />
-            <span>تسليم الامتحان النهائي</span>
-          </button>
+            تسليم الامتحان النهائي
+          </Button>
         )}
       </div>
     </div>

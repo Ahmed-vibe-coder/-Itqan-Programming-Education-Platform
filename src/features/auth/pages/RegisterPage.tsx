@@ -5,6 +5,9 @@ import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { KeyRound, User, Lock, CheckCircle2, AlertCircle, Sparkles, UserPlus } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/FormControls';
 
 // Safe platform student avatars
 const AVATARS = [
@@ -58,7 +61,6 @@ export const RegisterPage: React.FC = () => {
 
     try {
       if (isSupabaseConfigured()) {
-        // Invoke server-side Edge Function for atomic single-use redemption & name matching
         const { data: edgeRes, error: edgeErr } = await supabase.functions.invoke('redeem-single-use-invitation', {
           body: {
             code: invitationCode.trim(),
@@ -69,11 +71,9 @@ export const RegisterPage: React.FC = () => {
         });
 
         if (edgeErr || (edgeRes && edgeRes.error)) {
-          // If function returned explicit error or fallback
           const errorMsg = edgeRes?.error || edgeErr?.message;
           if (errorMsg) throw new Error(errorMsg);
 
-          // Direct DB fallback validation if edge function is in setup mode
           const { data: invData, error: invError } = await supabase
             .from('single_use_invitations')
             .select('*')
@@ -113,8 +113,7 @@ export const RegisterPage: React.FC = () => {
         }
 
       } else {
-        // Local interactive demo registration
-        const mockStudent = { id: `student-${Date.now()}`, email: email || `${username}@student.local` };
+        const mockStudent = { id: `student-${Date.now()}`, email: email || `${username}@itqan.local` };
         const mockProfile = {
           id: mockStudent.id,
           full_name: fullName,
@@ -137,7 +136,7 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col justify-between p-4 md:p-8">
+    <div className="min-h-screen bg-bg flex flex-col justify-between p-4 md:p-8 transition-colors duration-200">
       {/* Top Header */}
       <header className="max-w-5xl mx-auto w-full flex items-center justify-between py-4">
         <Link to="/">
@@ -147,22 +146,22 @@ export const RegisterPage: React.FC = () => {
       </header>
 
       {/* Main Form Box */}
-      <main className="max-w-lg mx-auto w-full my-auto py-6">
-        <div className="bg-surface border border-bdr rounded-2xl p-6 md:p-8 shadow-sm">
+      <main className="max-w-lg mx-auto w-full my-auto py-6 text-right">
+        <Card variant="default" padding="lg" className="shadow-itqan-soft border-orange-500/20">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="w-14 h-14 bg-brand-secondary/10 rounded-2xl flex items-center justify-center mx-auto mb-3 text-brand-secondary">
+            <div className="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mx-auto mb-3 text-orange-500 border border-orange-500/20 shadow-itqan-glow">
               <UserPlus className="w-7 h-7" />
             </div>
-            <h1 className="text-2xl font-bold text-txt-primary mb-2">تسجيل حساب طالب جديد</h1>
-            <p className="text-sm text-txt-muted">
-              ادخل كود الدعوة الخاص بك للانضمام لأكاديمية إتقان تحت إشراف معلمك.
+            <h1 className="text-2xl font-black text-txt-primary mb-2">تسجيل حساب طالب جديد</h1>
+            <p className="text-sm text-txt-muted font-bold">
+              ادخل كود الدعوة الخاص بك للانضمام لمنصة إتقان تحت إشراف معلمك.
             </p>
           </div>
 
           {/* Error */}
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-sm flex items-center gap-3">
+            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-sm font-bold flex items-center gap-3">
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{error}</span>
             </div>
@@ -171,8 +170,8 @@ export const RegisterPage: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleRegister} className="space-y-4">
             {/* Invitation Code */}
-            <div className="p-4 bg-brand-primary/5 border border-brand-primary/20 rounded-xl mb-4">
-              <label className="block text-xs font-bold text-brand-primary mb-1.5 flex items-center gap-1.5">
+            <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-itqan-card mb-4 text-right">
+              <label className="block text-xs font-black text-orange-500 mb-1.5 flex items-center gap-1.5">
                 <KeyRound className="w-4 h-4" />
                 <span>كود الدعوة من المعلم (مطلوب)</span>
               </label>
@@ -181,15 +180,15 @@ export const RegisterPage: React.FC = () => {
                 required
                 value={invitationCode}
                 onChange={(e) => setInvitationCode(e.target.value.toUpperCase())}
-                placeholder="NAWA-2026-XYZ"
+                placeholder="ITQAN-2026-XYZ"
                 dir="ltr"
-                className="w-full bg-surface border border-bdr rounded-lg px-4 py-2.5 text-base font-mono font-bold tracking-wider text-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 uppercase text-center"
+                className="w-full bg-surface border border-orange-500/40 rounded-itqan-input px-4 py-2.5 text-base font-mono font-black tracking-wider text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/40 uppercase text-center"
               />
             </div>
 
             {/* Avatar Selector */}
             <div>
-              <label className="block text-xs font-semibold text-txt-secondary mb-2 flex items-center gap-1">
+              <label className="block text-xs font-black text-txt-primary mb-2 flex items-center gap-1">
                 <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>اختر الصورة الرمزية الخاصة بك</span>
               </label>
@@ -202,7 +201,7 @@ export const RegisterPage: React.FC = () => {
                     title={av.label}
                     className={`h-12 rounded-xl flex items-center justify-center text-2xl border transition-all ${
                       selectedAvatar === av.id
-                        ? 'border-brand-primary bg-brand-primary/10 ring-2 ring-brand-primary/30 scale-105'
+                        ? 'border-orange-500 bg-orange-500/15 ring-2 ring-orange-500/30 scale-105'
                         : 'border-bdr bg-surface-secondary hover:border-bdr-strong'
                     }`}
                   >
@@ -213,115 +212,81 @@ export const RegisterPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Full Name */}
-              <div>
-                <label className="block text-xs font-semibold text-txt-secondary mb-1.5">
-                  الاسم الكامل
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="محمد أحمد"
-                  className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-2.5 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
-                />
-              </div>
+              <Input
+                label="الاسم الكامل"
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="محمد أحمد"
+              />
 
-              {/* Username */}
-              <div>
-                <label className="block text-xs font-semibold text-txt-secondary mb-1.5">
-                  اسم المستخدم (بالإنجليزي)
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value.toLowerCase())}
-                  placeholder="mohamed_coder"
-                  dir="ltr"
-                  className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-2.5 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 text-left"
-                />
-              </div>
-            </div>
-
-            {/* Email (Optional) */}
-            <div>
-              <label className="block text-xs font-semibold text-txt-secondary mb-1.5">
-                البريد الإلكتروني (اختياري)
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="student@example.com"
+              <Input
+                label="اسم المستخدم (بالإنجليزي)"
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                placeholder="mohamed_coder"
                 dir="ltr"
-                className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-2.5 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 text-left"
               />
             </div>
 
-            {/* Passwords */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-txt-secondary mb-1.5">
-                  كلمة المرور
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  dir="ltr"
-                  className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-2.5 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 text-left"
-                />
-              </div>
+            <Input
+              label="البريد الإلكتروني (اختياري)"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="student@example.com"
+              dir="ltr"
+            />
 
-              <div>
-                <label className="block text-xs font-semibold text-txt-secondary mb-1.5">
-                  تأكيد كلمة المرور
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                  dir="ltr"
-                  className="w-full bg-surface-secondary border border-bdr rounded-xl px-4 py-2.5 text-sm text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 text-left"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="كلمة المرور"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                dir="ltr"
+              />
+
+              <Input
+                label="تأكيد كلمة المرور"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                dir="ltr"
+              />
             </div>
 
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="w-full bg-brand-primary hover:bg-brand-primary-hover active:bg-brand-primary-active text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-2 mt-6 disabled:opacity-50"
+              isLoading={loading}
+              variant="primary"
+              size="lg"
+              fullWidth
             >
-              {loading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>جاري إنشاء الحساب والتأكد من كود الدعوة...</span>
-                </>
-              ) : (
-                <span>الانضمام للمنصة والبدء فوراً</span>
-              )}
-            </button>
+              الانضمام للمنصة والبدء فوراً
+            </Button>
           </form>
 
           {/* Already have account */}
           <div className="mt-6 pt-6 border-t border-bdr text-center">
-            <span className="text-xs text-txt-muted">لديك حساب بالفعل؟ </span>
-            <Link to="/login" className="text-xs font-semibold text-brand-primary hover:underline">
+            <span className="text-xs text-txt-muted font-bold">لديك حساب بالفعل؟ </span>
+            <Link to="/login" className="text-xs font-black text-orange-500 hover:underline">
               تسجيل الدخول
             </Link>
           </div>
-        </div>
+        </Card>
       </main>
 
       {/* Footer */}
-      <footer className="text-center text-xs text-txt-muted py-4">
-        منصة إتقان لتعليم البرمجة &copy; {new Date().getFullYear()} — بيئة تعليمية خاصة وآمنة.
+      <footer className="text-center text-xs text-txt-muted py-4 font-medium">
+        منصة إتقان التعليمية &copy; {new Date().getFullYear()} — جميع الحقوق محفوظة.
       </footer>
     </div>
   );

@@ -27,50 +27,50 @@ export const TrustBar: React.FC = () => {
     {
       icon: BookOpen,
       title: `${coursesCount} مسارات تعليمية متكاملة`,
-      subtitle: 'HTML, CSS, JavaScript من الصفر',
-      color: 'text-[#4F63F6] dark:text-[#6577FF]',
-      bg: 'bg-[#4F63F6]/10',
+      subtitle: 'تطوير الويب والبرمجة من الصفر',
+      color: 'text-orange-500',
+      bg: 'bg-orange-500/10 border-orange-500/20',
     },
     {
       icon: CheckSquare,
       title: 'اختبارات تفاعلية',
       subtitle: 'بوابة إتقان للتأكد من فهم كل درس',
-      color: 'text-[#39C6D8]',
-      bg: 'bg-[#39C6D8]/10',
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10 border-blue-500/20',
     },
     {
       icon: Layers,
       title: 'مشاريع تطبيقية',
-      subtitle: 'تطبيقات مواقع ويب حقيقية وكاملة',
-      color: 'text-[#F4B740]',
-      bg: 'bg-[#F4B740]/10',
+      subtitle: 'تطبيقات ومواقع حقيقية متكاملة',
+      color: 'text-amber-500',
+      bg: 'bg-amber-500/10 border-amber-500/20',
     },
     {
       icon: Award,
       title: 'شهادات إنجاز',
       subtitle: 'شهادات موثقة عند إتمام كل مسار',
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10 border-emerald-500/20',
     },
   ];
 
   return (
-    <section className="border-b border-[#94A3B8]/15 bg-[#0B1728] py-8 lg:py-10">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-16">
+    <section className="border-b border-bdr bg-surface-secondary/50 py-8 lg:py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="bg-[#101E31] border border-[rgba(148,163,184,0.18)] p-5 rounded-2xl flex items-center gap-4 transition-all hover:border-[#4F63F6]/40 hover:shadow-lg group"
+                className="bg-card border border-bdr p-5 rounded-itqan-card flex items-center gap-4 transition-all hover:border-orange-500/40 shadow-sm hover:shadow-itqan-soft group text-right"
               >
-                <div className={`w-12 h-12 rounded-xl ${item.bg} ${item.color} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
+                <div className={`w-12 h-12 rounded-2xl ${item.bg} ${item.color} border flex items-center justify-center shrink-0 transition-transform group-hover:scale-105`}>
                   <Icon className="w-6 h-6" />
                 </div>
                 <div className="text-right">
-                  <h3 className="font-bold text-base text-[#F8FAFC]">{item.title}</h3>
-                  <p className="text-xs text-[#94A3B8] mt-0.5">{item.subtitle}</p>
+                  <h3 className="font-extrabold text-base text-txt-primary">{item.title}</h3>
+                  <p className="text-xs text-txt-muted mt-0.5">{item.subtitle}</p>
                 </div>
               </div>
             );
@@ -80,4 +80,3 @@ export const TrustBar: React.FC = () => {
     </section>
   );
 };
-

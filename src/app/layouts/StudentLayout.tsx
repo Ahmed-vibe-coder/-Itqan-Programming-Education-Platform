@@ -33,8 +33,8 @@ export const StudentLayout: React.FC = () => {
 
   const mainBottomNav = [
     { to: '/app', label: 'الرئيسية', icon: Home },
-    { to: '/app/courses', label: 'تعلّم', icon: BookOpen },
-    { to: '/app/practice', label: 'تدرّب', icon: Code2 },
+    { to: '/app/courses', label: 'الكورسات', icon: BookOpen },
+    { to: '/app/practice', label: 'التدريب', icon: Code2 },
     { to: '/app/exams', label: 'الامتحانات', icon: FileCheck2 },
     { to: '/app/profile', label: 'حسابي', icon: User },
   ];
@@ -67,7 +67,7 @@ export const StudentLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-txt-primary flex flex-col md:flex-row pb-[env(safe-area-inset-bottom)]">
+    <div className="min-h-screen bg-bg text-txt-primary flex flex-col md:flex-row pb-[env(safe-area-inset-bottom)] transition-colors duration-200">
       {/* Desktop Collapsible Sidebar */}
       <aside
         className={`hidden md:flex flex-col border-l border-bdr bg-surface transition-all duration-300 z-30 sticky top-0 h-screen ${
@@ -87,7 +87,7 @@ export const StudentLayout: React.FC = () => {
           </button>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
           {sidebarNavItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -96,16 +96,16 @@ export const StudentLayout: React.FC = () => {
                 to={item.to}
                 end={item.to === '/app'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                  `flex items-center gap-3 px-3.5 py-2.5 rounded-itqan-btn font-extrabold text-xs transition-all ${
                     isActive
-                      ? 'bg-brand-primary text-white shadow-md shadow-brand-primary/20'
+                      ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
                       : 'text-txt-secondary hover:text-txt-primary hover:bg-surface-secondary'
                   } ${sidebarCollapsed ? 'justify-center px-0' : ''}`
                 }
                 title={sidebarCollapsed ? item.label : undefined}
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                {!sidebarCollapsed && <span>{item.label}</span>}
+                <Icon className="w-4.5 h-4.5 shrink-0" />
+                {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
               </NavLink>
             );
           })}
@@ -113,13 +113,13 @@ export const StudentLayout: React.FC = () => {
 
         <div className="p-3 border-t border-bdr bg-surface-secondary/50">
           <div className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-9 h-9 rounded-xl bg-brand-primary/10 text-brand-primary font-bold flex items-center justify-center text-sm shrink-0 border border-brand-primary/20">
+            <div className="w-9 h-9 rounded-xl bg-orange-500/10 text-orange-500 font-black flex items-center justify-center text-sm shrink-0 border border-orange-500/20">
               🦅
             </div>
             {!sidebarCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-txt-primary truncate">{profile?.full_name || 'طالب إتقان'}</p>
-                <p className="text-[11px] text-txt-muted truncate">@{profile?.username || 'student'}</p>
+              <div className="flex-1 min-w-0 text-right">
+                <p className="text-xs font-black text-txt-primary truncate">{profile?.full_name || 'طالب إتقان'}</p>
+                <p className="text-[11px] font-mono text-txt-muted truncate">@{profile?.username || 'student'}</p>
               </div>
             )}
             {!sidebarCollapsed && (
@@ -152,13 +152,13 @@ export const StudentLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold font-mono">
-              <Flame className="w-3.5 h-3.5 fill-amber-500" />
+            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-500 text-xs font-black font-mono">
+              <Flame className="w-4 h-4 fill-orange-500 animate-pulse" />
               <span>3 أيام</span>
             </div>
 
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold font-mono">
-              <Zap className="w-3.5 h-3.5 fill-indigo-500" />
+            <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-black font-mono">
+              <Zap className="w-4 h-4 fill-amber-500" />
               <span>250 XP</span>
             </div>
 
@@ -166,10 +166,10 @@ export const StudentLayout: React.FC = () => {
 
             <NavLink
               to="/app/notifications"
-              className="p-2 rounded-xl border border-bdr text-txt-secondary hover:text-txt-primary relative min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 rounded-itqan-btn border border-bdr text-txt-secondary hover:text-txt-primary hover:border-orange-500/40 relative min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-brand-accent rounded-full"></span>
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 rounded-full ring-2 ring-surface"></span>
             </NavLink>
           </div>
         </header>
@@ -179,7 +179,7 @@ export const StudentLayout: React.FC = () => {
           <Outlet />
         </main>
 
-        {/* Mobile Bottom Navigation Bar (App Experience) */}
+        {/* Mobile Bottom Navigation Bar */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-bdr px-2 py-2 flex items-center justify-around pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           {mainBottomNav.map((item) => {
             const Icon = item.icon;
@@ -189,8 +189,8 @@ export const StudentLayout: React.FC = () => {
                 to={item.to}
                 end={item.to === '/app'}
                 className={({ isActive }) =>
-                  `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all min-h-[44px] min-w-[44px] justify-center ${
-                    isActive ? 'text-brand-primary font-extrabold' : 'text-txt-muted hover:text-txt-primary'
+                  `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-[11px] font-extrabold transition-all min-h-[44px] min-w-[44px] justify-center ${
+                    isActive ? 'text-orange-500' : 'text-txt-muted hover:text-txt-primary'
                   }`
                 }
               >
@@ -201,10 +201,10 @@ export const StudentLayout: React.FC = () => {
           })}
         </nav>
 
-        {/* Mobile Profile & More Sheet */}
+        {/* Mobile Profile & Drawer Sheet */}
         {profileSheetOpen && (
-          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex justify-start">
-            <div className="w-4/5 max-w-xs bg-surface h-full p-5 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right overflow-y-auto">
+          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex justify-start animate-in fade-in duration-200">
+            <div className="w-4/5 max-w-xs bg-surface h-full p-5 flex flex-col justify-between shadow-2xl border-l border-bdr text-right animate-in slide-in-from-right duration-200 overflow-y-auto">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-bdr mb-6">
                   <Logo size="sm" showTagline />
@@ -217,7 +217,7 @@ export const StudentLayout: React.FC = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <p className="px-2 text-[10px] font-extrabold text-txt-muted uppercase tracking-wider mb-2">المزيد والأقسام المتقدمة</p>
+                  <p className="px-2 text-[10px] font-black text-txt-muted uppercase tracking-wider mb-2">المزيد والأقسام المتقدمة</p>
                   {profileSheetItems.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -226,9 +226,9 @@ export const StudentLayout: React.FC = () => {
                         to={item.to}
                         onClick={() => setProfileSheetOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                          `flex items-center gap-3 px-3 py-3 rounded-itqan-btn text-xs font-bold transition-all ${
                             isActive
-                              ? 'bg-brand-primary text-white'
+                              ? 'bg-orange-500 text-white'
                               : 'text-txt-secondary hover:bg-surface-secondary'
                           }`
                         }
@@ -244,7 +244,7 @@ export const StudentLayout: React.FC = () => {
               <div className="pt-4 border-t border-bdr mt-6">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 p-3 text-xs font-bold text-red-500 bg-red-500/10 rounded-xl min-h-[44px]"
+                  className="w-full flex items-center justify-center gap-2 p-3 text-xs font-bold text-red-500 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-itqan-btn transition-colors min-h-[44px]"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>تسجيل الخروج</span>

@@ -12,26 +12,25 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    // Check saved local storage preference
-    const saved = localStorage.getItem('nawa_theme') as Theme;
+    // Check saved local storage preference first
+    const saved = localStorage.getItem('itqan_theme') as Theme;
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }
-    // Default to system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
+    // Default to 'dark' mode as requested in specifications
+    return 'dark';
   });
 
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
       root.classList.add('dark');
+      root.classList.remove('light');
     } else {
       root.classList.remove('dark');
+      root.classList.add('light');
     }
-    localStorage.setItem('nawa_theme', theme);
+    localStorage.setItem('itqan_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

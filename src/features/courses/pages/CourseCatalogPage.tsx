@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { courseService } from '@/services/courseService';
 import { Course } from '@/types/database';
-import { BookOpen, ArrowLeft, Clock, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
+import { PageHeader, LoadingSkeleton, ErrorState, EmptyState } from '@/components/shared/StateComponents';
+import { CourseCard } from '@/components/ui/CourseCard';
+import { Input } from '@/components/ui/FormControls';
+import { Search } from 'lucide-react';
 
 export const CourseCatalogPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState<'all' | 'html' | 'css' | 'js'>('all');
 
   const fetchCourses = () => {
     setLoading(true);
@@ -29,67 +33,82 @@ export const CourseCatalogPage: React.FC = () => {
     fetchCourses();
   }, []);
 
+  const filteredCourses = courses.filter((c) => {
+    const matchesSearch = c.title_ar.toLowerCase().includes(searchQuery.toLowerCase()) || c.description_ar?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSubject = selectedSubject === 'all' || c.subject.toLowerCase() === selectedSubject;
+    return matchesSearch && matchesSubject;
+  });
+
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between border-b border-bdr pb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-txt-primary">المناهج والكورسات المتاحة</h1>
-          <p className="text-xs text-txt-muted">اختر المنهج الدراسي واستكمل الشرح والتطبيق العملي</p>
+    <div className="space-y-8 text-right max-w-7xl mx-auto">
+      <PageHeader
+        title="المناهج والكورسات التعليمية"
+        subtitle="اختر المسار الدراسي واستكمل الشرح والتطبيق العملي واختبر معلوماتك بنجاح"
+        badge="كتالوج الكورسات"
+      />
+
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card p-4 rounded-itqan-card border border-bdr shadow-sm">
+        <div className="w-full sm:w-80">
+          <Input
+            placeholder="ابحث عن كورس أو مهارة..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            icon={<Search className="w-4 h-4" />}
+          />
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+          {[
+            { id: 'all', label: 'جميع الكورسات' },
+            { id: 'html', label: 'HTML5' },
+            { id: 'css', label: 'CSS3' },
+            { id: 'js', label: 'JavaScript' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedSubject(tab.id as any)}
+              className={`px-4 py-2 rounded-itqan-btn text-xs font-black transition-all shrink-0 ${
+                selectedSubject === tab.id
+                  ? 'bg-orange-500 text-white shadow-sm'
+                  : 'bg-surface-secondary text-txt-secondary hover:text-txt-primary hover:bg-card-hover border border-bdr'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-48 bg-surface border border-bdr rounded-2xl animate-pulse p-6" />
-          ))}
-        </div>
+        <LoadingSkeleton type="card" count={3} />
       ) : error ? (
-        <div className="p-8 border border-red-500/20 bg-red-500/10 rounded-2xl text-center space-y-4 max-w-md mx-auto">
-          <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
-          <p className="text-sm font-bold text-red-600 dark:text-red-400">{error}</p>
-          <button
-            onClick={fetchCourses}
-            className="px-4 py-2 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl flex items-center gap-2 mx-auto transition-all"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>إعادة المحاولة</span>
-          </button>
-        </div>
-      ) : courses.length === 0 ? (
-        <div className="p-8 border border-bdr bg-surface rounded-2xl text-center space-y-3 max-w-md mx-auto">
-          <BookOpen className="w-10 h-10 text-txt-muted mx-auto" />
-          <h3 className="font-bold text-base text-txt-primary">لا توجد مناهج متاحة حالياً</h3>
-          <p className="text-xs text-txt-muted">سيتم إضافة مناهج دورية قريباً.</p>
-        </div>
+        <ErrorState message={error} onRetry={fetchCourses} />
+      ) : filteredCourses.length === 0 ? (
+        <EmptyState
+          title="لم يتم العثور على كورسات"
+          description="جرّب البحث بكلمات مختلفة أو تغيير التصفية."
+          onAction={() => {
+            setSearchQuery('');
+            setSelectedSubject('all');
+          }}
+          actionLabel="إعادة ضبط الفلاتر"
+        />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <Link
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCourses.map((course) => (
+            <CourseCard
               key={course.id}
-              to={`/app/courses/${course.slug}`}
-              className="bg-surface border border-bdr hover:border-brand-primary/40 rounded-2xl p-6 transition-all shadow-sm flex flex-col justify-between group"
-            >
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 text-brand-primary font-mono font-bold flex items-center justify-center text-sm">
-                  {course.subject.toUpperCase()}
-                </div>
-                <h3 className="text-xl font-bold text-txt-primary group-hover:text-brand-primary transition-colors">
-                  {course.title_ar}
-                </h3>
-                <p className="text-xs text-txt-muted leading-relaxed line-clamp-3">
-                  {course.description_ar}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-bdr flex items-center justify-between text-xs text-txt-secondary">
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-brand-primary" />
-                  <span>{course.estimated_hours} ساعات تعليمية</span>
-                </div>
-                <ArrowLeft className="w-4 h-4 text-txt-muted group-hover:text-brand-primary transition-colors" />
-              </div>
-            </Link>
+              id={course.id}
+              slug={course.slug}
+              title={course.title_ar}
+              instructor="الأكاديمية"
+              level="جميع المستويات"
+              duration={`${course.estimated_hours} ساعات`}
+              lessonsCount={12}
+              badge={course.subject.toUpperCase()}
+              variant="catalog"
+            />
           ))}
         </div>
       )}

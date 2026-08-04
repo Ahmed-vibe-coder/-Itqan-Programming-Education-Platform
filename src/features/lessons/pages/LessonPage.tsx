@@ -17,6 +17,11 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { LessonBlock } from '@/types/database';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Modal } from '@/components/ui/Modal';
+import { Textarea } from '@/components/ui/FormControls';
 
 export const LessonPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -33,8 +38,8 @@ export const LessonPage: React.FC = () => {
   const lessonData = {
     id: lessonId || 'l1030000-0000-0000-0000-000000000003',
     title_ar: 'هيكل مستند HTML الأساسي',
-    course_title: 'HTML من الصفر',
-    module_title: 'الوحدة الأولى: أساسيات الإنترنت وHTML',
+    course_title: 'HTML من الصفر إلى الإتقان',
+    module_title: 'الوحدة الأولى: أساسيات بناء الصفحات',
     estimated_minutes: 15,
     blocks: [
       {
@@ -49,7 +54,7 @@ export const LessonPage: React.FC = () => {
         lesson_id: 'l1',
         block_type: 'analogy',
         content: {
-          title_ar: 'تأطير اللوحة',
+          title_ar: 'تأطير اللوحة البرمجية',
           text_ar: 'تخيل أن صفحة الويب مثل الورقة البيضاء في برواز: يحتوي البرواز على معلومات خفية عن الصفحة مثل عنوانها ولغتها، وداخل البرواز توجد الرسوم والمحتوى الذي يراه الزائر.',
         },
         order_index: 2,
@@ -70,7 +75,7 @@ export const LessonPage: React.FC = () => {
         content: {
           language: 'html',
           caption_ar: 'الهيكل القياسي لمستند HTML5',
-          code: `<!DOCTYPE html>\n<html lang="ar" dir="rtl">\n  <head>\n    <meta charset="UTF-8">\n    <title>صفحتي الأولى</title>\n  </head>\n  <body>\n    <h1>أهلاً بكم في موقعي!</h1>\n  </body>\n</html>`,
+          code: `<!DOCTYPE html>\n<html lang="ar" dir="rtl">\n  <head>\n    <meta charset="UTF-8">\n    <title>صفحتي الأولى — إتقان</title>\n  </head>\n  <body>\n    <h1>أهلاً بكم في موقعي!</h1>\n  </body>\n</html>`,
         },
         order_index: 4,
       },
@@ -79,8 +84,8 @@ export const LessonPage: React.FC = () => {
         lesson_id: 'l1',
         block_type: 'live_playground',
         content: {
-          initialHtml: `<!DOCTYPE html>\n<html lang="ar" dir="rtl">\n  <head>\n    <title>تجربتي المباشرة</title>\n  </head>\n  <body>\n    <h1 style="color: #4355E8">أول عنوان لي!</h1>\n    <p>هذه أول فقرة أقوم بتعديلها بنفسي.</p>\n  </body>\n</html>`,
-          initialCss: `body { padding: 10px; font-family: sans-serif; }`,
+          initialHtml: `<!DOCTYPE html>\n<html lang="ar" dir="rtl">\n  <head>\n    <title>تجربتي المباشرة</title>\n  </head>\n  <body>\n    <h1 style="color: #F97316">أول عنوان لي!</h1>\n    <p>هذه أول فقرة أقوم بتعديلها بنفسي في إتقان.</p>\n  </body>\n</html>`,
+          initialCss: `body { padding: 16px; font-family: system-ui, sans-serif; }`,
           initialJs: `console.log("تم تحميل الهيكل بنجاح!");`,
         },
         order_index: 5,
@@ -129,7 +134,7 @@ export const LessonPage: React.FC = () => {
         id: 'mq2',
         prompt_ar: 'ما فضل الوسم <!DOCTYPE html> في بداية الملف؟',
         options: [
-          { id: 'opt1', text_ar: 'تلوين الصفحة باللون الأزرق', code: '' },
+          { id: 'opt1', text_ar: 'تلوين الصفحة باللون البرتقالي', code: '' },
           { id: 'opt2', text_ar: 'إعلام المتصفح أن المستند مكتوب بلغة HTML5', code: '' },
           { id: 'opt3', text_ar: 'إضافة زر لتسجيل الدخول', code: '' },
         ],
@@ -152,12 +157,12 @@ export const LessonPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
+    <div className="flex flex-col lg:flex-row gap-8 text-right">
       {/* Sidebar Curriculum (Desktop) */}
       <aside className="hidden lg:block w-72 shrink-0 space-y-4 sticky top-20 h-[calc(100vh-6rem)] overflow-y-auto pl-2">
-        <div className="bg-surface border border-bdr rounded-2xl p-4 space-y-3">
-          <h3 className="font-bold text-sm text-txt-primary flex items-center gap-2 pb-2 border-b border-bdr">
-            <BookOpen className="w-4 h-4 text-brand-primary" />
+        <Card variant="default" padding="sm" className="space-y-3">
+          <h3 className="font-black text-sm text-txt-primary flex items-center gap-2 pb-2 border-b border-bdr">
+            <BookOpen className="w-4 h-4 text-orange-500" />
             <span>منهج الوحدة الأولى</span>
           </h3>
 
@@ -165,11 +170,11 @@ export const LessonPage: React.FC = () => {
             {curriculumLessons.map((item, idx) => (
               <div
                 key={item.id}
-                className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
+                className={`p-3 rounded-itqan-btn text-xs font-extrabold flex items-center justify-between transition-all ${
                   item.id === lessonData.id
-                    ? 'bg-brand-primary text-white shadow-sm'
+                    ? 'bg-orange-500 text-white shadow-sm'
                     : item.status === 'completed'
-                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                    ? 'bg-emerald-500/10 text-emerald-500'
                     : 'text-txt-muted opacity-60'
                 }`}
               >
@@ -184,15 +189,15 @@ export const LessonPage: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </aside>
 
       {/* Main Reading & Workspace Area */}
       <div className="flex-1 max-w-4xl min-w-0 space-y-6">
         {/* Breadcrumb Header */}
-        <div className="flex items-center justify-between flex-wrap gap-2 text-xs text-txt-muted pb-2 border-b border-bdr">
+        <div className="flex items-center justify-between flex-wrap gap-2 text-xs text-txt-muted pb-2 border-b border-bdr font-bold">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <Link to="/app/courses" className="hover:text-txt-primary">
+            <Link to="/app/courses" className="hover:text-orange-500 transition-colors">
               {lessonData.course_title}
             </Link>
             <ChevronRight className="w-3.5 h-3.5 rotate-180" />
@@ -200,14 +205,14 @@ export const LessonPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-brand-primary" />
+            <div className="flex items-center gap-1 font-mono">
+              <Clock className="w-3.5 h-3.5 text-orange-500" />
               <span>{lessonData.estimated_minutes} دقيقة</span>
             </div>
 
             <button
               onClick={() => setBookmarked(!bookmarked)}
-              className={`p-1.5 rounded-lg border transition-colors ${
+              className={`p-2 rounded-itqan-btn border transition-colors ${
                 bookmarked ? 'border-amber-500 bg-amber-500/10 text-amber-500' : 'border-bdr text-txt-muted hover:text-txt-primary'
               }`}
               title="حفظ الدرس للمفضلة"
@@ -216,8 +221,8 @@ export const LessonPage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setNoteOpen(!noteOpen)}
-              className="p-1.5 rounded-lg border border-bdr text-txt-muted hover:text-txt-primary hover:border-bdr-strong transition-colors"
+              onClick={() => setNoteOpen(true)}
+              className="p-2 rounded-itqan-btn border border-bdr text-txt-muted hover:text-txt-primary hover:border-orange-500/40 transition-colors"
               title="تدوين ملاحظة خاصة"
             >
               <FileText className="w-4 h-4" />
@@ -226,7 +231,7 @@ export const LessonPage: React.FC = () => {
             {/* Mobile Curriculum Trigger */}
             <button
               onClick={() => setCurriculumDrawerOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg border border-bdr text-txt-muted hover:text-txt-primary"
+              className="lg:hidden p-2 rounded-itqan-btn border border-bdr text-txt-muted hover:text-txt-primary"
             >
               <Menu className="w-4 h-4" />
             </button>
@@ -235,7 +240,7 @@ export const LessonPage: React.FC = () => {
 
         {/* Lesson Title */}
         <div className="space-y-2">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-txt-primary">{lessonData.title_ar}</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-txt-primary">{lessonData.title_ar}</h1>
         </div>
 
         {/* Lesson Block Renderer */}
@@ -249,61 +254,40 @@ export const LessonPage: React.FC = () => {
 
         {/* Footer Lesson Controls */}
         <div className="pt-8 border-t border-bdr flex items-center justify-between">
-          <Link
-            to="/app/lessons/l1020000-0000-0000-0000-000000000002"
-            className="px-4 py-2.5 rounded-xl border border-bdr text-txt-secondary hover:text-txt-primary hover:border-bdr-strong text-xs font-bold transition-all flex items-center gap-2"
-          >
-            <ArrowRight className="w-4 h-4" />
-            <span>الدرس السابق</span>
+          <Link to="/app/lessons/l1020000-0000-0000-0000-000000000002">
+            <Button variant="secondary" size="md" leftIcon={<ArrowRight className="w-4 h-4" />}>
+              الدرس السابق
+            </Button>
           </Link>
 
-          <button
+          <Button
             disabled={lessonStatus !== 'completed'}
             onClick={() => navigate('/app/lessons/l1040000-0000-0000-0000-000000000004')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-              lessonStatus === 'completed'
-                ? 'bg-brand-primary hover:bg-brand-primary-hover text-white shadow-sm'
-                : 'bg-surface-secondary text-txt-muted border border-bdr cursor-not-allowed'
-            }`}
+            variant="primary"
+            size="md"
+            rightIcon={<ArrowLeft className="w-4 h-4" />}
           >
-            <span>الدرس التالي</span>
-            <ArrowLeft className="w-4 h-4" />
-          </button>
+            الدرس التالي
+          </Button>
         </div>
       </div>
 
-      {/* Student Private Notes Modal/Drawer */}
-      {noteOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border border-bdr rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-bdr pb-3">
-              <h3 className="font-bold text-sm text-txt-primary flex items-center gap-2">
-                <FileText className="w-4 h-4 text-brand-primary" />
-                <span>ملاحظة خاصة بالدرس</span>
-              </h3>
-              <button onClick={() => setNoteOpen(false)} className="text-txt-muted hover:text-txt-primary">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <textarea
-              value={noteContent}
-              onChange={(e) => setNoteContent(e.target.value)}
-              placeholder="اكتب ملاحظاتك الشخصية للتذكر لاحقاً..."
-              className="w-full h-32 p-3 bg-surface-secondary border border-bdr rounded-xl text-xs text-txt-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/40 resize-none"
-            />
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setNoteOpen(false)}
-                className="px-4 py-2 bg-brand-primary text-white font-bold text-xs rounded-xl"
-              >
-                حفظ الملاحظة
-              </button>
-            </div>
+      {/* Student Private Notes Modal */}
+      <Modal isOpen={noteOpen} onClose={() => setNoteOpen(false)} title="ملاحظة خاصة بالدرس">
+        <div className="space-y-4">
+          <Textarea
+            value={noteContent}
+            onChange={(e) => setNoteContent(e.target.value)}
+            placeholder="اكتب ملاحظاتك الشخصية للتذكر لاحقاً..."
+            rows={4}
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="primary" size="sm" onClick={() => setNoteOpen(false)}>
+              حفظ الملاحظة
+            </Button>
           </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

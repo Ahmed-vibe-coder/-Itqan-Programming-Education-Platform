@@ -142,10 +142,33 @@ export const CertificateManagementPage: React.FC = () => {
     setTimeout(() => setSaveSuccessMsg(null), 4000);
   };
 
-  const filteredAttempts = publicAttempts.filter((a) =>
-    a.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (a.verification_code && a.verification_code.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const certifiedAttempts = publicAttempts.filter((a) => a.passed);
+  const totalAttemptsCount = publicAttempts.length;
+  const certifiedCount = certifiedAttempts.length + certificates.length;
+  const passRate = totalAttemptsCount > 0 ? ((certifiedAttempts.length / totalAttemptsCount) * 100).toFixed(1) : '100';
+
+  const [filterPassedOnly, setFilterPassedOnly] = useState(false);
+
+  const filteredAttempts = publicAttempts.filter((a) => {
+    const matchesSearch =
+      a.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (a.verification_code && a.verification_code.toLowerCase().includes(searchQuery.toLowerCase()));
+    if (filterPassedOnly) {
+      return matchesSearch && a.passed;
+    }
+    return matchesSearch;
+  });
+
+  const handleAdminPreviewTemplate = () => {
+    setSelectedCertificateModalData({
+      studentName: 'اسم الطالب التجريبي',
+      score: 30,
+      totalQuestions: 30,
+      percentage: 100,
+      completedAt: new Date().toISOString(),
+      verificationCode: 'HTML-DEMO-2026',
+    });
+  };
 
   return (
     <div className="space-y-6 text-right font-sans">
@@ -167,10 +190,10 @@ export const CertificateManagementPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Award className="w-6 h-6 text-brand-primary" />
-            <h1 className="text-xl font-extrabold text-txt-primary">إدارة نتائج اختبارات شهادة HTML والشهادات والأسئلة</h1>
+            <h1 className="text-xl font-extrabold text-txt-primary">إدارة ونظام شهادات كورس HTML</h1>
           </div>
           <p className="text-xs text-txt-muted mt-1">
-            متابعة نتائج الطلاب، تنزيل الشهادات، وتعديل وإدارة أسئلة اختبار شهادة HTML الـ 30 بالكامل.
+            متابعة إحصائيات الطلاب الحاصلين على الشهادة، معاينة تصميم الشهادة الفاخر 2026، وتنزيل الشهادات بصيغة PNG.
           </p>
         </div>
 
@@ -185,7 +208,7 @@ export const CertificateManagementPage: React.FC = () => {
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>نتائج الطلاب والشهادات</span>
+            <span>الحاصلون على الشهادة والنتائج</span>
           </button>
 
           <button
@@ -214,6 +237,50 @@ export const CertificateManagementPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Admin KPI Stats Overview Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 bg-gradient-to-br from-amber-500/10 via-surface to-surface border border-amber-500/30 rounded-2xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-amber-500">
+            <span className="text-xs font-extrabold">عدد الحاصلين على الشهادة</span>
+            <Award className="w-5 h-5" />
+          </div>
+          <div className="text-3xl font-black font-mono text-txt-primary">{certifiedCount} طالبًا</div>
+          <p className="text-[11px] text-txt-muted">حققوا نسبة اجتياز 50% فأكثر وحصلوا على شهادة HTML</p>
+        </div>
+
+        <div className="p-5 bg-surface border border-bdr rounded-2xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-brand-primary">
+            <span className="text-xs font-extrabold">إجمالي المحاولات المجراة</span>
+            <Users className="w-5 h-5" />
+          </div>
+          <div className="text-3xl font-black font-mono text-txt-primary">{totalAttemptsCount} محاولة</div>
+          <p className="text-[11px] text-txt-muted">سجل المحاولات العامة في قاعدة البيانات</p>
+        </div>
+
+        <div className="p-5 bg-surface border border-bdr rounded-2xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-emerald-500">
+            <span className="text-xs font-extrabold">نسبة نجاح الاختبار العامة</span>
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+          <div className="text-3xl font-black font-mono text-emerald-500">%{passRate}</div>
+          <p className="text-[11px] text-txt-muted">معدل الطلاب الاجتيازيين في امتحان الـ 30 سؤالاً</p>
+        </div>
+
+        <div className="p-5 bg-gradient-to-br from-blue-600/10 via-surface to-surface border border-blue-500/30 rounded-2xl flex flex-col justify-between space-y-2 shadow-sm">
+          <div>
+            <span className="text-xs font-extrabold text-blue-500 block mb-1">معاينة تصميم الشهادة</span>
+            <p className="text-[11px] text-txt-muted">استعراض شكل الشهادة الملكية 2026 للأدمن</p>
+          </div>
+          <button
+            onClick={handleAdminPreviewTemplate}
+            className="w-full py-2 px-3 bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-bold rounded-xl shadow-md inline-flex items-center justify-center gap-1.5 transition-all"
+          >
+            <Eye className="w-4 h-4" />
+            <span>معاينة الشهادة الفاخرة</span>
+          </button>
+        </div>
+      </div>
+
       {saveSuccessMsg && (
         <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 animate-in fade-in">
           <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
@@ -221,30 +288,45 @@ export const CertificateManagementPage: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 1: Public HTML Exam Results */}
+      {/* Tab 1: Public HTML Exam Results & Certificates */}
       {activeTab === 'html_exam' && (
         <div className="bg-surface border border-bdr p-6 rounded-2xl space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-bdr pb-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-bdr pb-4">
             <div>
               <h2 className="text-base font-black text-txt-primary flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                <span>سجل نتائج الطلاب في اختبار HTML الشامل (30 سؤالاً)</span>
+                <span>سجل الطلاب الحاصلين على الشهادة والنتائج</span>
               </h2>
               <p className="text-xs text-txt-muted">
-                يظهر هنا اسم الطالب الثلاثي، الدرجة من 30، النسبة المئوية، حالة النجاح، وخيار تنزيل الشهادة.
+                جدول يبين أسماء الطلاب، الدرجات، رموز الشهادات الرقمية، وإمكانية المعاينة والتنزيل المباشر للأدمن.
               </p>
             </div>
 
-            {/* Search Input */}
-            <div className="relative w-full sm:w-64">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="البحث باسم الطالب أو الكود..."
-                className="w-full pl-9 pr-4 py-2 bg-surface-secondary border border-bdr rounded-xl text-xs text-txt-primary focus:outline-none focus:border-brand-primary"
-              />
-              <Search className="w-4 h-4 text-txt-muted absolute left-3 top-2.5" />
+            <div className="flex items-center gap-3 w-full md:w-auto flex-wrap">
+              {/* Filter toggle button */}
+              <button
+                onClick={() => setFilterPassedOnly(!filterPassedOnly)}
+                className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all flex items-center gap-1.5 ${
+                  filterPassedOnly
+                    ? 'bg-amber-500/15 border-amber-500 text-amber-600 dark:text-amber-400'
+                    : 'bg-surface-secondary border-bdr text-txt-muted hover:text-txt-primary'
+                }`}
+              >
+                <Award className="w-4 h-4" />
+                <span>{filterPassedOnly ? 'عرض الناجحين فقط (الحاصلين على شهادة)' : 'تصفية: الناجحين فقط'}</span>
+              </button>
+
+              {/* Search Input */}
+              <div className="relative w-full sm:w-64">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="البحث باسم الطالب أو الكود..."
+                  className="w-full pl-9 pr-4 py-2 bg-surface-secondary border border-bdr rounded-xl text-xs text-txt-primary focus:outline-none focus:border-brand-primary"
+                />
+                <Search className="w-4 h-4 text-txt-muted absolute left-3 top-2.5" />
+              </div>
             </div>
           </div>
 
@@ -256,17 +338,17 @@ export const CertificateManagementPage: React.FC = () => {
                   <th className="p-3 font-bold">اسم الطالب</th>
                   <th className="p-3 font-bold">النتيجة</th>
                   <th className="p-3 font-bold">النسبة المئوية</th>
-                  <th className="p-3 font-bold">الحالة</th>
-                  <th className="p-3 font-bold">رمز الشهادة</th>
-                  <th className="p-3 font-bold">تاريخ الإتمام</th>
-                  <th className="p-3 font-bold text-center">معاينة / تنزيل الشهادة</th>
+                  <th className="p-3 font-bold">حالة الشهادة</th>
+                  <th className="p-3 font-bold">رمز التوثيق (Certificate ID)</th>
+                  <th className="p-3 font-bold">تاريخ الإصدار</th>
+                  <th className="p-3 font-bold text-center">إجراءات الأدمن (معاينة / تنزيل)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-bdr">
                 {filteredAttempts.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="p-8 text-center text-txt-muted font-bold">
-                      لا توجد محاولات مجراة حتى الآن لمطابقة البحث.
+                      لا توجد سجلات مطابقة للبحث حالياً.
                     </td>
                   </tr>
                 ) : (
@@ -283,7 +365,7 @@ export const CertificateManagementPage: React.FC = () => {
                               : 'bg-red-500/10 text-red-500 border border-red-500/30'
                           }`}
                         >
-                          {attempt.passed ? 'ناجح ✅' : 'لم يتجاوز 50% ❌'}
+                          {attempt.passed ? 'تم إصدار الشهادة ✅' : 'لم يجتاز (بدون شهادة) ❌'}
                         </span>
                       </td>
                       <td className="p-3 font-mono text-txt-muted" dir="ltr">
@@ -299,24 +381,44 @@ export const CertificateManagementPage: React.FC = () => {
                       </td>
                       <td className="p-3 text-center">
                         {attempt.passed ? (
-                          <button
-                            onClick={() =>
-                              setSelectedCertificateModalData({
-                                studentName: attempt.student_name,
-                                score: attempt.score,
-                                totalQuestions: attempt.total_questions,
-                                percentage: attempt.percentage,
-                                completedAt: attempt.completed_at,
-                                verificationCode: attempt.verification_code,
-                              })
-                            }
-                            className="px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition-all"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                            <span>تنزيل الشهادة</span>
-                          </button>
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() =>
+                                setSelectedCertificateModalData({
+                                  studentName: attempt.student_name,
+                                  score: attempt.score,
+                                  totalQuestions: attempt.total_questions,
+                                  percentage: attempt.percentage,
+                                  completedAt: attempt.completed_at,
+                                  verificationCode: attempt.verification_code,
+                                })
+                              }
+                              className="px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition-all"
+                              title="معاينة الشهادة بـ Canvas"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>معاينة الشهادة</span>
+                            </button>
+                            <button
+                              onClick={() =>
+                                setSelectedCertificateModalData({
+                                  studentName: attempt.student_name,
+                                  score: attempt.score,
+                                  totalQuestions: attempt.total_questions,
+                                  percentage: attempt.percentage,
+                                  completedAt: attempt.completed_at,
+                                  verificationCode: attempt.verification_code,
+                                })
+                              }
+                              className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-black inline-flex items-center gap-1.5 shadow-sm transition-all"
+                              title="تنزيل الشهادة PNG"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              <span>تنزيل PNG</span>
+                            </button>
+                          </div>
                         ) : (
-                          <span className="text-txt-muted text-[11px]">بدون شهادة (يلزم إعادة)</span>
+                          <span className="text-txt-muted text-[11px]">غير مؤهل</span>
                         )}
                       </td>
                     </tr>
@@ -327,6 +429,7 @@ export const CertificateManagementPage: React.FC = () => {
           </div>
         </div>
       )}
+
 
       {/* Tab 2: Edit HTML 30 Questions */}
       {activeTab === 'edit_questions' && (
@@ -564,7 +667,7 @@ export const CertificateManagementPage: React.FC = () => {
 
             <div className="space-y-3">
               {certificates.map((cert) => (
-                <div key={cert.id} className="p-4 rounded-xl border border-bdr bg-surface-secondary/50 space-y-2 text-xs">
+                <div key={cert.id} className="p-4 rounded-xl border border-bdr bg-surface-secondary/50 space-y-3 text-xs">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-extrabold text-txt-primary">{cert.studentName}</span>
@@ -575,6 +678,41 @@ export const CertificateManagementPage: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-txt-muted">{cert.courseName} — درجة الاختبار: {cert.finalScore}%</p>
+
+                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-bdr/50">
+                    <button
+                      onClick={() =>
+                        setSelectedCertificateModalData({
+                          studentName: cert.studentName,
+                          score: Math.round((cert.finalScore / 100) * 30),
+                          totalQuestions: 30,
+                          percentage: cert.finalScore,
+                          completedAt: cert.issuedAt,
+                          verificationCode: cert.certificateNumber,
+                        })
+                      }
+                      className="px-3 py-1.5 bg-brand-primary hover:bg-brand-primary-hover text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition-all"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>معاينة</span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        setSelectedCertificateModalData({
+                          studentName: cert.studentName,
+                          score: Math.round((cert.finalScore / 100) * 30),
+                          totalQuestions: 30,
+                          percentage: cert.finalScore,
+                          completedAt: cert.issuedAt,
+                          verificationCode: cert.certificateNumber,
+                        })
+                      }
+                      className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-black inline-flex items-center gap-1.5 shadow-sm transition-all"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>تنزيل PNG</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

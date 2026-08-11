@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { drawHtmlCertificateOnCanvas } from '../utils/drawCertificateCanvas';
 
 describe('إتقان — Final Exam & Certificate Auto-Issuance (80% Passing Threshold)', () => {
   it('generates unique certificate verification code and format', () => {
@@ -41,4 +42,42 @@ describe('إتقان — Final Exam & Certificate Auto-Issuance (80% Passing Thr
     const isVerifiedActive = certificate.status === 'active';
     expect(isVerifiedActive).toBe(false);
   });
+
+  it('draws 1-to-1 luxury HTML certificate on canvas correctly', () => {
+    const mockContext = {
+      fillRect: () => {},
+      save: () => {},
+      restore: () => {},
+      beginPath: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      closePath: () => {},
+      fill: () => {},
+      stroke: () => {},
+      strokeRect: () => {},
+      fillText: () => {},
+      translate: () => {},
+      rotate: () => {},
+      arc: () => {},
+      createRadialGradient: () => ({ addColorStop: () => {} }),
+    };
+
+    const mockCanvas = {
+      width: 0,
+      height: 0,
+      getContext: () => mockContext,
+    };
+
+    drawHtmlCertificateOnCanvas(mockCanvas as any, {
+      studentName: 'أحمد سعيد',
+      courseTitle: 'HTML & Web Development Course',
+      completedAt: '2026-08-12',
+      verificationCode: 'HTML-AHM-982104',
+      instructorName: 'Ahmed Saeed',
+    });
+
+    expect(mockCanvas.width).toBe(1200);
+    expect(mockCanvas.height).toBe(800);
+  });
 });
+

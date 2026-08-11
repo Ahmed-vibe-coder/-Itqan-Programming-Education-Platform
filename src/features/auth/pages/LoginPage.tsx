@@ -84,7 +84,12 @@ export const LoginPage: React.FC = () => {
 
       // Predefined Admin Check or Fallback Mode
       const inputLower = usernameOrEmail.toLowerCase().trim();
-      const isAdminCreds = (inputLower === 'ahmd@gmail.com' || inputLower === 'ahmd') && password === 'ahmed123';
+      const isAdminCreds = (
+        inputLower === 'ahmed@gmail.com' ||
+        inputLower === 'ahmd@gmail.com' ||
+        inputLower === 'ahmed' ||
+        inputLower === 'ahmd'
+      ) && password === 'ahmed123';
 
       if (isAdminCreds || inputLower.includes('teacher') || inputLower.includes('owner') || inputLower.includes('admin')) {
         const detectedRole: UserRole = 'owner';
@@ -92,13 +97,13 @@ export const LoginPage: React.FC = () => {
         const mockProfile = {
           id: 'owner-admin-1',
           full_name: mockName,
-          username: 'ahmd',
+          username: inputLower.includes('@') ? inputLower.split('@')[0] : inputLower,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
 
         localStorage.setItem('nawa_has_owner', 'true');
-        setMockUser({ id: mockProfile.id, email: 'ahmd@gmail.com' }, mockProfile, detectedRole);
+        setMockUser({ id: mockProfile.id, email: 'ahmed@gmail.com' }, mockProfile, detectedRole);
         navigate('/teacher', { replace: true });
         return;
       }

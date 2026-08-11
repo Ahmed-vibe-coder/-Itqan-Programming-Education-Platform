@@ -39,7 +39,7 @@ export const HeroSection: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-8">
               <Link to="/html-exam">
                 <Button variant="primary" size="lg" fullWidth className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-black shadow-lg shadow-orange-500/20 border-none" leftIcon={<Trophy className="w-5 h-5" />} rightIcon={<ArrowLeft className="w-5 h-5" />}>
-                  اختبار HTML الشامل (شهادة فورية) 🎓
+                  اختبار شهادة HTML المعتمد 🎓
                 </Button>
               </Link>
 

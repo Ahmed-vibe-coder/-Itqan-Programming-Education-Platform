@@ -78,7 +78,7 @@ export const HtmlExamTakePage: React.FC = () => {
               <FileCode2 className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="font-black text-sm text-txt-primary">اختبار HTML الشامل</h1>
+              <h1 className="font-black text-sm text-txt-primary">اختبار شهادة HTML المعتمد</h1>
               <p className="text-[11px] text-txt-muted font-bold">الطالب: {studentName}</p>
             </div>
           </div>

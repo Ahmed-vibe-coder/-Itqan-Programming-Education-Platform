@@ -167,10 +167,10 @@ export const CertificateManagementPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Award className="w-6 h-6 text-brand-primary" />
-            <h1 className="text-xl font-extrabold text-txt-primary">إدارة نتائج امتحانات HTML والشهادات والأسئلة</h1>
+            <h1 className="text-xl font-extrabold text-txt-primary">إدارة نتائج اختبارات شهادة HTML والشهادات والأسئلة</h1>
           </div>
           <p className="text-xs text-txt-muted mt-1">
-            متابعة نتائج الطلاب، تنزيل الشهادات، وتعديل وإدارة أسئلة امتحان HTML الـ 30 بالكامل.
+            متابعة نتائج الطلاب، تنزيل الشهادات، وتعديل وإدارة أسئلة اختبار شهادة HTML الـ 30 بالكامل.
           </p>
         </div>
 

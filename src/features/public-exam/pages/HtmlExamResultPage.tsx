@@ -24,30 +24,34 @@ export const HtmlExamResultPage: React.FC = () => {
         setLoading(false);
         return;
       }
-
-      const data = await publicHtmlExamService.getAttemptById(attemptId);
-      if (data) {
-        setAttempt(data);
-        if (data.passed) {
-          setShowCertificate(true); // Automatically trigger certificate for passed students
+      try {
+        const found = await publicHtmlExamService.getAttemptById(attemptId);
+        if (found) {
+          setAttempt(found);
+          // If student passed (score >= 50%), auto show certificate popup
+          if (found.passed) {
+            setShowCertificate(true);
+          }
         }
+      } catch (err) {
+        console.error('Error fetching exam attempt:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
-
     loadAttempt();
   }, [attemptId]);
 
   const handleRetakeExam = () => {
-    navigate('/html-exam/take', { replace: true });
+    navigate('/html-exam');
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center p-4">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-xs text-txt-muted font-bold">جاري تصحيح وتجهيز نتائج الامتحان...</span>
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <span className="text-xs text-txt-muted font-bold">جاري تصحيح وتجهيز نتائج الاختبار...</span>
         </div>
       </div>
     );
@@ -60,10 +64,10 @@ export const HtmlExamResultPage: React.FC = () => {
           <XCircle className="w-12 h-12 text-red-500 mx-auto" />
           <h2 className="text-lg font-black text-txt-primary">لم يتم العثور على نتيجة المحاولة</h2>
           <p className="text-xs text-txt-muted font-bold">
-            يبدو أن معرّف النتيجة غير متوفر أو تم مسحه. يمكنك البدء بمحاولة امتحان جديدة.
+            يبدو أن معرّف النتيجة غير متوفر أو تم مسحه. يمكنك البدء بمحاولة اختبار جديدة.
           </p>
           <Button onClick={handleRetakeExam} variant="primary" size="md" fullWidth>
-            بدء امتحان جديد
+            بدء اختبار جديد
           </Button>
         </Card>
       </div>
@@ -95,7 +99,7 @@ export const HtmlExamResultPage: React.FC = () => {
             <span>الرئيسية</span>
           </Link>
           <Badge variant={passed ? 'success' : 'danger'} size="md">
-            {passed ? 'تم اجتياز الامتحان بنجاح' : 'لم تتجاوز 50% — يلزم إعادة الامتحان'}
+            {passed ? 'تم اجتياز الاختبار بنجاح' : 'لم تتجاوز 50% — يلزم إعادة الاختبار'}
           </Badge>
         </div>
 
@@ -113,7 +117,7 @@ export const HtmlExamResultPage: React.FC = () => {
             </div>
 
             <h1 className="text-2xl font-black text-txt-primary">
-              {passed ? `مبروك يا بطل! أتممت امتحان HTML بنجاح` : `حظاً أوفر! لم تتمكن من اجتياز الامتحان`}
+              {passed ? `مبروك يا بطل! أتممت اختبار HTML بنجاح` : `حظاً أوفر! لم تتمكن من اجتياز الاختبار`}
             </h1>
             <p className="text-xs text-txt-muted font-bold">الطالب: {student_name}</p>
           </div>
@@ -143,95 +147,85 @@ export const HtmlExamResultPage: React.FC = () => {
                   <Award className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-txt-primary">تم إشعارات وإصدار شهادتك الرسمية!</h3>
+                  <h3 className="font-black text-sm text-txt-primary">تم إصدار شهادتك الرسمية المعتمدة!</h3>
                   <p className="text-xs text-txt-muted font-bold">
                     تم رسم شهادتك الرقمية المعتمدة بكود توثيق رقمي: <span dir="ltr" className="font-mono text-brand-primary">{verification_code}</span>
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <Button
                   onClick={() => setShowCertificate(true)}
                   variant="primary"
                   size="md"
+                  fullWidth
                   leftIcon={<Award className="w-4 h-4" />}
                 >
-                  عرض وتحميل الشهادة المرسومة
+                  عرض وتحميل الشهادة الرسمية
                 </Button>
                 <Button
                   onClick={handleRetakeExam}
                   variant="secondary"
                   size="md"
+                  fullWidth
                   leftIcon={<RotateCcw className="w-4 h-4" />}
                 >
-                  تحسين الدرجة (إعادة الامتحان)
+                  إعادة الاختبار لتحسين الدرجة
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="p-5 bg-red-500/10 border border-red-500/30 rounded-2xl text-right space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-500/20 text-red-500 flex items-center justify-center shrink-0">
-                  <RotateCcw className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-black text-sm text-red-500">يتطلب الحصول على الشهادة تحقيق 50% (15/30) على الأقل</h3>
-                  <p className="text-xs text-txt-muted font-bold">
-                    حققت {score} إجابات صحيحة من 30. يمكنك مراجعة الإجابات الصحيحة أدناه ثم إعادة الامتحان فوراً.
-                  </p>
-                </div>
-              </div>
-
+            <div className="p-5 bg-red-500/10 border border-red-500/30 rounded-2xl text-center space-y-3">
+              <p className="text-xs text-red-500 font-bold">
+                عذراً، يلزم الحصول على 50% أو أكثر (15 سؤالاً من أصل 30) لإصدار الشهادة الرسمية المعتمدة.
+              </p>
               <Button
                 onClick={handleRetakeExam}
                 variant="primary"
-                size="lg"
-                fullWidth
-                leftIcon={<RotateCcw className="w-5 h-5" />}
+                size="md"
+                className="bg-red-600 hover:bg-red-700 text-white border-none"
+                leftIcon={<RotateCcw className="w-4 h-4" />}
               >
-                إعادة الامتحان الآن
+                إعادة اختبار HTML الآن
               </Button>
             </div>
           )}
 
-          {/* Tabs Navigation for Review */}
-          <div className="flex items-center justify-center border-b border-bdr gap-4 pt-4">
+          {/* Navigation Tabs (Summary vs Review) */}
+          <div className="flex items-center justify-center gap-4 border-t border-bdr pt-4">
             <button
               onClick={() => setActiveTab('summary')}
-              className={`pb-3 text-xs font-black transition-all border-b-2 ${
+              className={`px-4 py-2 text-xs font-black rounded-xl transition-all ${
                 activeTab === 'summary'
-                  ? 'border-brand-primary text-brand-primary'
-                  : 'border-transparent text-txt-muted hover:text-txt-primary'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'text-txt-muted hover:text-txt-primary'
               }`}
             >
-              ملخص الأداء والتقييم
+              ملخص النتيجة
             </button>
             <button
               onClick={() => setActiveTab('review')}
-              className={`pb-3 text-xs font-black transition-all border-b-2 ${
+              className={`px-4 py-2 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 ${
                 activeTab === 'review'
-                  ? 'border-brand-primary text-brand-primary'
-                  : 'border-transparent text-txt-muted hover:text-txt-primary'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'text-txt-muted hover:text-txt-primary'
               }`}
             >
-              مراجعة الـ 30 سؤالاً وإجاباتهم (Question Review)
+              <BookOpen className="w-4 h-4" />
+              <span>مراجعة الـ 30 سؤالاً وإجاباتهم</span>
             </button>
           </div>
 
-          {/* Tab 1: Summary */}
+          {/* Tab 1: Summary Stats Grid */}
           {activeTab === 'summary' && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-right pt-2">
-              <div className="p-4 bg-surface-secondary border border-bdr rounded-2xl space-y-1">
-                <span className="text-txt-muted font-bold block">إجمالي الأسئلة</span>
-                <span className="font-black text-base text-txt-primary font-mono">{total_questions} أسئلة</span>
+            <div className="grid grid-cols-2 gap-4 text-center text-xs pt-2">
+              <div className="p-4 bg-surface-secondary rounded-2xl border border-bdr space-y-1">
+                <span className="text-txt-muted font-bold block">عدد الإجابات الصحيحة</span>
+                <span className="font-black text-base text-emerald-500 font-mono">{score} سؤالاً</span>
               </div>
-              <div className="p-4 bg-surface-secondary border border-bdr rounded-2xl space-y-1">
-                <span className="text-txt-muted font-bold block">الإجابات الصحيحة</span>
-                <span className="font-black text-base text-emerald-500 font-mono">{score} إجابة</span>
-              </div>
-              <div className="p-4 bg-surface-secondary border border-bdr rounded-2xl space-y-1 col-span-2 sm:col-span-1">
-                <span className="text-txt-muted font-bold block">الإجابات الخاطئة</span>
+              <div className="p-4 bg-surface-secondary rounded-2xl border border-bdr space-y-1">
+                <span className="text-txt-muted font-bold block">عدد الإجابات الخاطئة</span>
                 <span className="font-black text-base text-red-500 font-mono">{total_questions - score} إجابة</span>
               </div>
             </div>
@@ -253,53 +247,56 @@ export const HtmlExamResultPage: React.FC = () => {
                         : 'bg-red-500/5 border-red-500/20'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-black text-txt-primary text-sm">
-                        سؤال {idx + 1}: {q.prompt}
+                    <div className="flex items-center justify-between">
+                      <span className="font-black text-txt-primary flex items-center gap-2">
+                        <span>سؤال {idx + 1}:</span>
+                        <span>{q.prompt}</span>
                       </span>
-                      {isCorrect ? (
-                        <Badge variant="success" size="sm">إجابة صحيحة</Badge>
-                      ) : (
-                        <Badge variant="danger" size="sm">إجابة خاطئة</Badge>
-                      )}
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          isCorrect ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
+                        }`}
+                      >
+                        {isCorrect ? 'إجابة صحيحة ✓' : 'إجابة خاطئة ✕'}
+                      </span>
                     </div>
 
                     {q.codeSnippet && (
-                      <div className="p-3 bg-slate-950 rounded-xl text-slate-100 font-mono text-xs overflow-x-auto" dir="ltr">
+                      <div className="p-2.5 bg-slate-950 rounded-xl text-emerald-400 font-mono text-[11px] overflow-x-auto" dir="ltr">
                         <pre><code>{q.codeSnippet}</code></pre>
                       </div>
                     )}
 
+                    {/* Choices Breakdown */}
                     <div className="space-y-1.5 pt-1">
                       {q.options.map((opt) => {
-                        const isUserOpt = userChoice === opt.id;
-                        const isCorrectOpt = q.correctAnswerId === opt.id;
+                        const isUserOption = opt.id === userChoice;
+                        const isCorrectOption = opt.id === q.correctAnswerId;
 
                         return (
                           <div
                             key={opt.id}
-                            className={`p-2.5 rounded-xl border flex items-center justify-between font-medium ${
-                              isCorrectOpt
-                                ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold'
-                                : isUserOpt
-                                ? 'bg-red-500/20 border-red-500/40 text-red-700 dark:text-red-300 font-bold'
-                                : 'bg-surface border-bdr text-txt-muted'
+                            className={`p-2.5 rounded-xl border flex items-center justify-between ${
+                              isCorrectOption
+                                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-bold'
+                                : isUserOption && !isCorrect
+                                ? 'bg-red-500/15 border-red-500/30 text-red-700 dark:text-red-300 font-bold'
+                                : 'bg-surface border-bdr text-txt-secondary'
                             }`}
                           >
                             <span className={opt.isCode ? 'font-mono' : ''} dir={opt.isCode ? 'ltr' : undefined}>
                               {opt.text}
                             </span>
-                            {isCorrectOpt && <span className="text-[11px] font-bold text-emerald-500">الإجابة الصحيحة ✓</span>}
-                            {isUserOpt && !isCorrectOpt && <span className="text-[11px] font-bold text-red-500">اختيارك ✗</span>}
+                            {isCorrectOption && <span className="text-[10px] text-emerald-500 font-black">الإجابة الصحيحة ✓</span>}
+                            {isUserOption && !isCorrectOption && <span className="text-[10px] text-red-500 font-black">إجابتك ✕</span>}
                           </div>
                         );
                       })}
                     </div>
 
-                    <div className="p-3 bg-surface border border-bdr rounded-xl text-txt-secondary leading-relaxed">
-                      <strong className="text-brand-primary block mb-0.5">الشرح التوضيحي:</strong>
-                      {q.explanation}
-                    </div>
+                    <p className="text-[11px] text-txt-muted font-bold border-t border-bdr/40 pt-2">
+                      💡 الشرح التوضيحي: {q.explanation}
+                    </p>
                   </div>
                 );
               })}

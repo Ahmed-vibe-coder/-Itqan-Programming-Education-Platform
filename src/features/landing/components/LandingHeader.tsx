@@ -12,7 +12,7 @@ export const LandingHeader: React.FC = () => {
 
   const navLinks = [
     { label: 'الرئيسية', href: '#' },
-    { label: 'اختبار HTML مجاني 🎓', href: '/html-exam', isRouterLink: true },
+    { label: 'اختبار شهادة HTML المعتمد 🎓', href: '/html-exam', isRouterLink: true },
     { label: 'المسارات التعليمية', href: '#paths' },
     { label: 'مميزات إتقان', href: '#features' },
     { label: 'آلية العمل', href: '#how-it-works' },

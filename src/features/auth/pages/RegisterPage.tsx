@@ -85,10 +85,14 @@ export const RegisterPage: React.FC = () => {
           }
 
           const targetEmail = `${username.trim().toLowerCase()}@itqan.edu.internal`;
+          const redirectUrl = `${window.location.origin}/login`;
           const { data: authData, error: authError } = await supabase.auth.signUp({
             email: targetEmail,
             password,
-            options: { data: { full_name: fullName, username } }
+            options: {
+              emailRedirectTo: redirectUrl,
+              data: { full_name: fullName, username }
+            }
           });
 
           if (authError || !authData.user) throw new Error(authError?.message || 'تعذر التسجيل.');

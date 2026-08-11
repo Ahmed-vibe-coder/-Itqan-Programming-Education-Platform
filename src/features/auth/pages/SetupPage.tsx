@@ -18,10 +18,12 @@ export const SetupPage: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successInfo, setSuccessInfo] = useState<string | null>(null);
 
   const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessInfo(null);
 
     if (!email || !fullName || !username || !password) {
       setError('يرجى ملء جميع الحقول المطلوبة.');
@@ -42,11 +44,13 @@ export const SetupPage: React.FC = () => {
 
     try {
       if (isSupabaseConfigured()) {
+        const redirectUrl = `${window.location.origin}/login`;
         // Sign up with Supabase Auth
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
+            emailRedirectTo: redirectUrl,
             data: { full_name: fullName, username }
           }
         });
@@ -54,18 +58,32 @@ export const SetupPage: React.FC = () => {
         if (signUpError) throw signUpError;
         if (!data.user) throw new Error('تعذر إنشاء حساب المالك.');
 
-        // Create profile
-        await supabase.from('profiles').insert({
-          id: data.user.id,
-          full_name: fullName,
-          username,
-        });
+        // If session exists (Email Confirmation is OFF in Supabase or user auto-confirmed)
+        if (data.session) {
+          // Upsert profile
+          await supabase.from('profiles').upsert({
+            id: data.user.id,
+            full_name: fullName,
+            username,
+          });
 
-        // Assign owner role
-        await supabase.from('user_roles').insert({
-          user_id: data.user.id,
-          role: 'owner',
-        });
+          // Assign owner role
+          await supabase.from('user_roles').upsert({
+            user_id: data.user.id,
+            role: 'owner',
+          }, { onConflict: 'user_id,role' });
+
+          await checkHasOwner();
+          navigate('/teacher', { replace: true });
+          return;
+        } else {
+          // Session is null => Email verification is required by Supabase
+          setSuccessInfo(
+            'تم إرسال طلب إنشاء الحساب بنجاح! إذا كانت خاصية التأكيد عبر البريد مفعّلة في Supabase ولم تصلك الرسالة، يمكنك إيقاف تفعيل خيار (Confirm email) من لوحة تحكم Supabase لتسجيل الدخول الفوري.'
+          );
+          setLoading(false);
+          return;
+        }
       } else {
         // Local state setup
         const mockOwner = { id: 'owner-1', email };
@@ -116,6 +134,14 @@ export const SetupPage: React.FC = () => {
             <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-sm flex items-center gap-3">
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{error}</span>
+            </div>
+          )}
+
+          {/* Success / Info Banner */}
+          {successInfo && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-sm flex items-center gap-3">
+              <CheckCircle2 className="w-5 h-5 shrink-0" />
+              <span>{successInfo}</span>
             </div>
           )}
 

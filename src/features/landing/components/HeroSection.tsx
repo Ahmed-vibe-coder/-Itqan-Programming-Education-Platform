@@ -37,17 +37,17 @@ export const HeroSection: React.FC = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-8">
-              <Link to="/register">
-                <Button variant="primary" size="lg" fullWidth leftIcon={<KeyRound className="w-5 h-5" />} rightIcon={<ArrowLeft className="w-5 h-5" />}>
-                  ابدأ رحلة التعلم مجانًا
+              <Link to="/html-exam">
+                <Button variant="primary" size="lg" fullWidth className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-black shadow-lg shadow-orange-500/20 border-none" leftIcon={<Trophy className="w-5 h-5" />} rightIcon={<ArrowLeft className="w-5 h-5" />}>
+                  اختبار HTML الشامل (شهادة فورية) 🎓
                 </Button>
               </Link>
 
-              <a href="#paths">
-                <Button variant="secondary" size="lg" fullWidth>
-                  استكشف الكورسات والمسارات
+              <Link to="/register">
+                <Button variant="secondary" size="lg" fullWidth leftIcon={<KeyRound className="w-5 h-5" />}>
+                  انضم للمنصة
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Trust Line */}

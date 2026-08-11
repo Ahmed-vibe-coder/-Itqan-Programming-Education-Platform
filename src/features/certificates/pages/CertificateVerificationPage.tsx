@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Award, CheckCircle2, XCircle, ShieldCheck, Calendar, User, BookOpen, Download, Printer } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { publicHtmlExamService } from '@/services/publicHtmlExamService';
 
 export const CertificateVerificationPage: React.FC = () => {
   const { verificationCode } = useParams<{ verificationCode: string }>();
@@ -12,6 +13,22 @@ export const CertificateVerificationPage: React.FC = () => {
     async function checkVerification() {
       setLoading(true);
       if (!verificationCode) {
+        setLoading(false);
+        return;
+      }
+
+      // Check public HTML quiz certificates first if code starts with ITQAN-HTML
+      const publicCert = await publicHtmlExamService.getCertificateByCode(verificationCode);
+      if (publicCert) {
+        setCertificate({
+          certificateNumber: publicCert.verification_code,
+          verificationCode: publicCert.verification_code,
+          studentName: publicCert.student_name,
+          courseName: publicCert.course_name,
+          issueDate: new Date(publicCert.issued_at).toLocaleDateString('ar-EG'),
+          finalScore: publicCert.percentage,
+          status: publicCert.status,
+        });
         setLoading(false);
         return;
       }

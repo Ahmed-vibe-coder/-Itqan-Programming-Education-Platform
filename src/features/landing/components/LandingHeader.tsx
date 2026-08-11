@@ -12,6 +12,7 @@ export const LandingHeader: React.FC = () => {
 
   const navLinks = [
     { label: 'الرئيسية', href: '#' },
+    { label: 'اختبار HTML مجاني 🎓', href: '/html-exam', isRouterLink: true },
     { label: 'المسارات التعليمية', href: '#paths' },
     { label: 'مميزات إتقان', href: '#features' },
     { label: 'آلية العمل', href: '#how-it-works' },
@@ -45,16 +46,26 @@ export const LandingHeader: React.FC = () => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm font-extrabold text-txt-secondary hover:text-orange-500 transition-colors py-1 relative after:absolute after:bottom-0 after:right-0 after:w-0 after:h-0.5 after:bg-orange-500 hover:after:w-full after:transition-all"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.isRouterLink ? (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="text-sm font-black text-orange-500 hover:text-orange-400 bg-orange-500/10 px-3 py-1.5 rounded-full border border-orange-500/20 transition-all hover:scale-105"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="text-sm font-extrabold text-txt-secondary hover:text-orange-500 transition-colors py-1 relative after:absolute after:bottom-0 after:right-0 after:w-0 after:h-0.5 after:bg-orange-500 hover:after:w-full after:transition-all"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </nav>
         </div>
 
@@ -110,16 +121,27 @@ export const LandingHeader: React.FC = () => {
         <div className="md:hidden fixed inset-x-0 top-20 bg-surface/98 backdrop-blur-xl border-b border-bdr shadow-2xl transition-all z-40 text-right">
           <div className="px-6 py-6 space-y-6">
             <nav className="flex flex-col space-y-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="px-4 py-3 rounded-itqan-btn text-base font-extrabold text-txt-primary hover:bg-orange-500/10 hover:text-orange-500 transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) =>
+                link.isRouterLink ? (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 rounded-itqan-btn text-base font-black text-orange-500 bg-orange-500/10 hover:bg-orange-500/20 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="px-4 py-3 rounded-itqan-btn text-base font-extrabold text-txt-primary hover:bg-orange-500/10 hover:text-orange-500 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
             </nav>
 
             <div className="pt-4 border-t border-bdr flex flex-col gap-3">

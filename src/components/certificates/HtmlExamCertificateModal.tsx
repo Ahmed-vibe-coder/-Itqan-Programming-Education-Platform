@@ -1,41 +1,44 @@
 import React from 'react';
 import { Share2, Download, Award, X } from 'lucide-react';
 
-export interface CertificateData {
+export interface HtmlExamCertificateModalProps {
   studentName: string;
-  courseOrExamTitle: string;
-  subject: string;
   score: number;
-  maxScore: number;
+  totalQuestions: number;
   percentage: number;
-  isPassed: boolean;
-  timeTakenMinutes?: number;
   completedAt: string;
   verificationCode?: string;
   teacherPhone?: string;
-}
-
-interface CertificateModalProps {
-  data: CertificateData;
   onClose: () => void;
 }
 
-export const CertificateModal: React.FC<CertificateModalProps> = ({ data, onClose }) => {
-  const teacherPhone = data.teacherPhone || '+201128968983';
+export const HtmlExamCertificateModal: React.FC<HtmlExamCertificateModalProps> = ({
+  studentName,
+  score,
+  totalQuestions,
+  percentage,
+  completedAt,
+  verificationCode = 'ITQAN-HTML-2026',
+  teacherPhone = '+201128968983',
+  onClose,
+}) => {
+  const isPassed = percentage >= 50;
+  const examTitle = 'اختبار إتقان الشامل في لغة HTML';
+  const courseTitle = 'دورة تطوير الويب - HTML';
 
   const handleShareWhatsApp = () => {
     const message = `
 🎓 *شهادة إتمام كورس HTML*
 
-👤 *الطالب:* ${data.studentName}
-📚 *الامتحان:* ${data.courseOrExamTitle}
-📖 *المادة:* ${data.subject}
+👤 *الطالب:* ${studentName}
+📚 *الامتحان:* ${examTitle}
+📖 *المادة:* ${courseTitle}
 
-✅ *النتيجة:* ${data.score}/${data.maxScore} (${data.percentage.toFixed(1)}%)
-⏱️ *التاريخ:* ${new Date(data.completedAt).toLocaleString('ar-EG')}
-🔒 *رمز التوثيق:* ${data.verificationCode || 'ITQAN-CERT-2026'}
+✅ *النتيجة:* ${score}/${totalQuestions} (${percentage.toFixed(1)}%)
+⏱️ *التاريخ:* ${new Date(completedAt).toLocaleString('ar-EG')}
+🔒 *رمز التوثيق:* ${verificationCode}
 
-${data.isPassed ? '🎉 *تهانينا! نجح في الامتحان*' : '📝 *يحتاج إلى مراجعة*'}
+${isPassed ? '🎉 *تهانينا! نجح في الامتحان*' : '📝 *يحتاج إلى مراجعة*'}
 
 _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
     `.trim();
@@ -51,15 +54,15 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
          منصة إتقان (Itqan Academy)
 ==============================================
 
-الطالب: ${data.studentName}
-الامتحان: ${data.courseOrExamTitle}
-المادة: ${data.subject}
+الطالب: ${studentName}
+الامتحان: ${examTitle}
+المادة: ${courseTitle}
 
-النتيجة: ${data.score}/${data.maxScore} (${data.percentage.toFixed(1)}%)
-تاريخ الإصدار: ${new Date(data.completedAt).toLocaleString('ar-EG')}
-رمز التوثيق الرقمي: ${data.verificationCode || 'ITQAN-CERT-2026'}
+النتيجة: ${score}/${totalQuestions} (${percentage.toFixed(1)}%)
+تاريخ الإصدار: ${new Date(completedAt).toLocaleString('ar-EG')}
+رمز التوثيق الرقمي: ${verificationCode}
 
-الحالة: ${data.isPassed ? '✅ ناجح' : '❌ راسب'}
+الحالة: ${isPassed ? '✅ ناجح' : '❌ راسب'}
 
 صادرة عن منصة إتقان (Itqan Academy) - شهادة معتمدة لكورس HTML
     `.trim();
@@ -68,7 +71,7 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `certificate_${data.studentName.replace(/\s+/g, '_')}_${Date.now()}.txt`;
+    link.download = `certificate_${studentName.replace(/\s+/g, '_')}_${Date.now()}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -113,7 +116,7 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
                 نشهد بأن الطالب
               </h3>
               <p className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
-                {data.studentName}
+                {studentName}
               </p>
               <p className="text-gray-600 font-medium">قد أتم بنجاح اختبار كورس HTML</p>
             </div>
@@ -122,11 +125,11 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-right">
                 <p className="text-sm text-gray-600 mb-1">📚 عنوان الامتحان</p>
-                <p className="font-semibold text-gray-900">{data.courseOrExamTitle}</p>
+                <p className="font-semibold text-gray-900">{examTitle}</p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-right">
                 <p className="text-sm text-gray-600 mb-1">📖 المادة / الكورس</p>
-                <p className="font-semibold text-gray-900">دورة تطوير الويب - HTML</p>
+                <p className="font-semibold text-gray-900">{courseTitle}</p>
               </div>
             </div>
 
@@ -136,19 +139,19 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
                 <div>
                   <p className="text-sm text-gray-600 mb-2 font-medium">النتيجة</p>
                   <p className="text-2xl font-bold text-gray-900 font-mono">
-                    {data.score}/{data.maxScore}
+                    {score}/{totalQuestions}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 mb-2 font-medium">النسبة المئوية</p>
-                  <p className={`text-2xl font-bold font-mono ${data.isPassed ? 'text-green-600' : 'text-red-600'}`}>
-                    {data.percentage.toFixed(1)}%
+                  <p className={`text-2xl font-bold font-mono ${isPassed ? 'text-green-600' : 'text-red-600'}`}>
+                    {percentage.toFixed(1)}%
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600 mb-2 font-medium">الحالة</p>
-                  <p className={`text-2xl font-bold ${data.isPassed ? 'text-green-600' : 'text-red-600'}`}>
-                    {data.isPassed ? '✅ ناجح' : '❌ راسب'}
+                  <p className={`text-2xl font-bold ${isPassed ? 'text-green-600' : 'text-red-600'}`}>
+                    {isPassed ? '✅ ناجح' : '❌ راسب'}
                   </p>
                 </div>
               </div>
@@ -159,13 +162,13 @@ _منصة إتقان (Itqan Academy) - نظام الامتحانات الذكي_
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-right">
                 <p className="text-sm text-gray-600 mb-1">🔒 رمز التوثيق الرقمي</p>
                 <p className="font-semibold text-blue-600 font-mono" dir="ltr">
-                  {data.verificationCode || 'ITQAN-CERT-2026'}
+                  {verificationCode}
                 </p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-right">
                 <p className="text-sm text-gray-600 mb-1">📅 تاريخ الإتمام</p>
                 <p className="font-semibold text-gray-900">
-                  {new Date(data.completedAt).toLocaleDateString('ar-EG', {
+                  {new Date(completedAt).toLocaleDateString('ar-EG', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',

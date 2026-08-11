@@ -23,6 +23,11 @@ const NotFoundPage = lazy(() => import('@/features/public/pages/NotFoundPage').t
 // Certificates Public Verification
 const CertificateVerificationPage = lazy(() => import('@/features/certificates/pages/CertificateVerificationPage').then(m => ({ default: m.CertificateVerificationPage })));
 
+// Public HTML Exam Pages
+const HtmlExamLaunchPage = lazy(() => import('@/features/public-exam/pages/HtmlExamLaunchPage').then(m => ({ default: m.HtmlExamLaunchPage })));
+const HtmlExamTakePage = lazy(() => import('@/features/public-exam/pages/HtmlExamTakePage').then(m => ({ default: m.HtmlExamTakePage })));
+const HtmlExamResultPage = lazy(() => import('@/features/public-exam/pages/HtmlExamResultPage').then(m => ({ default: m.HtmlExamResultPage })));
+
 // Enhanced Student Experience Pages
 const OnboardingPage = lazy(() => import('@/features/onboarding/pages/OnboardingPage').then(m => ({ default: m.OnboardingPage })));
 const PlacementPage = lazy(() => import('@/features/placement/pages/PlacementPage').then(m => ({ default: m.PlacementPage })));
@@ -97,6 +102,11 @@ export const AppRouter: React.FC = () => {
 
           {/* Public Certificate Verification Route */}
           <Route path="/verify/:verificationCode" element={<CertificateVerificationPage />} />
+
+          {/* Public Unauthenticated HTML Exam Routes */}
+          <Route path="/html-exam" element={<HtmlExamLaunchPage />} />
+          <Route path="/html-exam/take" element={<HtmlExamTakePage />} />
+          <Route path="/html-exam/result/:attemptId" element={<HtmlExamResultPage />} />
 
           {/* First Owner Setup */}
           <Route element={<SetupGuard />}>

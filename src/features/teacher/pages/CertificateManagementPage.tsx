@@ -6,28 +6,7 @@ import { getHtmlExamQuestions, saveHtmlExamQuestions, HtmlExamQuestion } from '@
 import { HtmlExamCertificateModal } from '@/components/certificates/HtmlExamCertificateModal';
 
 export const CertificateManagementPage: React.FC = () => {
-  const [certificates, setCertificates] = useState<any[]>([
-    {
-      id: 'cert-1',
-      certificateNumber: 'ITQAN-88A92B',
-      verificationCode: '88a92b',
-      studentName: 'أحمد علي حسن',
-      courseName: 'أساسيات لغة HTML — بناء هيكل الصفحات',
-      issuedAt: '2026-07-30',
-      finalScore: 98,
-      status: 'active'
-    },
-    {
-      id: 'cert-2',
-      certificateNumber: 'ITQAN-77B41C',
-      verificationCode: '77b41c',
-      studentName: 'سارة محمد محمود',
-      courseName: 'فن التنسيق بلغة CSS — الألوان والمخططات',
-      issuedAt: '2026-07-29',
-      finalScore: 95,
-      status: 'active'
-    }
-  ]);
+  const [certificates, setCertificates] = useState<any[]>([]);
 
   const [publicAttempts, setPublicAttempts] = useState<PublicExamAttempt[]>([]);
   const [htmlQuestions, setHtmlQuestions] = useState<HtmlExamQuestion[]>([]);
@@ -42,6 +21,8 @@ export const CertificateManagementPage: React.FC = () => {
   const [studentName, setStudentName] = useState('');
   const [courseName, setCourseName] = useState('');
   const [score, setScore] = useState(100);
+
+  const supabaseConfigured = isSupabaseConfigured();
 
   useEffect(() => {
     async function loadData() {
@@ -234,8 +215,19 @@ export const CertificateManagementPage: React.FC = () => {
             <Plus className="w-4 h-4" />
             <span>إصدار شهادة يدوية</span>
           </button>
-        </div>
       </div>
+
+      {!supabaseConfigured && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold space-y-1 animate-in fade-in">
+          <div className="flex items-center gap-2 text-amber-500 font-extrabold text-sm">
+            <HelpCircle className="w-5 h-5 shrink-0" />
+            <span>تنبيه هام للأدمن: قاعدة بيانات Supabase غير متصلة حالياً في Vercel</span>
+          </div>
+          <p className="text-txt-muted text-[11px] leading-relaxed">
+            عندما يؤدي الطلاب الاختبار على Vercel بدون ربط متغيرات البيئة <code>VITE_SUPABASE_URL</code> و <code>VITE_SUPABASE_ANON_KEY</code> أو بدون تشغيل الـ SQL Migration، تُحفظ النتائج محلياً في متصفح الطالب فقط ولا تصل إلى قاعدة البيانات العامة. يرجى ربط Supabase وإضافة المفاتيح وتنفيذ كود الـ SQL لكي تظهر نتائج جميع الطلاب فوراً هنا.
+          </p>
+        </div>
+      )}
 
       {/* Admin KPI Stats Overview Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

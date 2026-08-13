@@ -215,6 +215,7 @@ export const CertificateManagementPage: React.FC = () => {
             <Plus className="w-4 h-4" />
             <span>إصدار شهادة يدوية</span>
           </button>
+        </div>
       </div>
 
       {!supabaseConfigured && (

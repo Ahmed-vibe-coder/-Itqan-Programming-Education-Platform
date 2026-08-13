@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Award, FileCode2, CheckCircle2, ArrowLeft, Clock, ShieldCheck, User, Sparkles } from 'lucide-react';
+import { FileCode2, ArrowLeft, User, Sparkles, BookOpen, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -15,7 +15,7 @@ export const HtmlExamLaunchPage: React.FC = () => {
   const handleStartExam = (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentName.trim()) {
-      setErrorMsg('يرجى إدخال اسمك الكريم لإصداره على الشهادة الرسمية عند الاجتياز.');
+      setErrorMsg('يرجى إدخال اسمك الكريم ليتم طباعته على الشهادة الرسمية.');
       return;
     }
 
@@ -25,61 +25,61 @@ export const HtmlExamLaunchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg text-txt-primary p-4 md:p-8 flex items-center justify-center font-sans transition-colors">
-      <div className="max-w-2xl w-full space-y-6 text-right">
+      <div className="max-w-xl w-full space-y-5 text-right">
         {/* Navigation Top Bar */}
         <div className="flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-brand-primary hover:underline">
+          <Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-orange-500 hover:text-orange-600 transition-colors">
             <ArrowLeft className="w-4 h-4 rotate-180" />
             <span>العودة للرئيسية</span>
           </Link>
-          <Badge variant="warning" size="md">اختبار مهارات معتمد مباشر بدون تسجيل دخول</Badge>
+          <Badge variant="warning" size="md">اختبار مهارات معتمد مباشر</Badge>
         </div>
 
-        {/* Hero Banner Card */}
-        <Card variant="default" padding="lg" className="space-y-6 border-brand-primary/30 shadow-2xl relative overflow-hidden backdrop-blur-md">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -z-10 animate-pulse" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -z-10" />
+        {/* Main Launch Card */}
+        <Card variant="default" padding="lg" className="space-y-6 border-bdr shadow-2xl relative overflow-hidden backdrop-blur-xl">
+          {/* Ambient background glow */}
+          <div className="absolute -top-10 -left-10 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
+          {/* Hero Header */}
           <div className="text-center space-y-3">
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-xl shadow-orange-500/25 text-white transform hover:scale-105 transition-all">
-              <FileCode2 className="w-10 h-10" />
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-orange-500/20 text-white transform hover:scale-105 transition-all">
+              <FileCode2 className="w-8 h-8" />
             </div>
 
             <h1 className="text-2xl md:text-3xl font-black text-txt-primary tracking-tight">
               اختبار شهادة إتقان الشامل في لغة HTML
             </h1>
-            <p className="text-xs md:text-sm text-txt-muted max-w-lg mx-auto leading-relaxed font-medium">
-              اختبر مهاراتك في لغة بناء صفحات الويب HTML عبر 30 سؤالاً مقسماً بدقة، واحصل فوراً على شهادة إتقان معتمدة رسمية قابلة للتحميل والمشاركة عند اجتياز 50% أو أكثر.
+            <p className="text-xs md:text-sm text-txt-secondary max-w-md mx-auto leading-relaxed font-normal">
+              اختبر مهاراتك التطبيقية في لغة بناء وتنسيق الويب HTML، واحصل فوراً على شهادة إتقان المعتمدة عند إكمال الاختبار.
             </p>
           </div>
 
-          {/* Key Exam Attributes Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
-            <div className="p-4 bg-surface-secondary/80 rounded-2xl border border-bdr space-y-1 hover:border-brand-primary/40 transition-all">
-              <span className="text-[11px] text-txt-muted font-bold block">عدد الأسئلة</span>
-              <span className="font-black text-base text-brand-primary font-mono">30 سؤالاً</span>
+          {/* Exam Questions Info Grid (30 Total Pool, 10 per Exam) */}
+          <div className="grid grid-cols-2 gap-3 text-center">
+            <div className="p-3.5 bg-surface-secondary/80 rounded-2xl border border-bdr flex flex-col items-center justify-center space-y-1 hover:border-orange-500/30 transition-all">
+              <div className="flex items-center gap-1.5 text-txt-muted text-xs font-bold">
+                <BookOpen className="w-3.5 h-3.5 text-orange-500" />
+                <span>إجمالي بنك الأسئلة</span>
+              </div>
+              <span className="font-black text-base md:text-lg text-txt-primary font-mono">30 سؤالاً</span>
             </div>
 
-            <div className="p-4 bg-surface-secondary/80 rounded-2xl border border-bdr space-y-1 hover:border-emerald-500/40 transition-all">
-              <span className="text-[11px] text-txt-muted font-bold block">زمن الاختبار</span>
-              <span className="font-black text-base text-emerald-500 flex items-center justify-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>بدون وقت محدّد (Untimed)</span>
-              </span>
-            </div>
-
-            <div className="p-4 bg-surface-secondary/80 rounded-2xl border border-bdr space-y-1 col-span-2 sm:col-span-1 hover:border-amber-500/40 transition-all">
-              <span className="text-[11px] text-txt-muted font-bold block">درجة اجتياز الشهادة</span>
-              <span className="font-black text-base text-amber-500 font-mono">50% (15 / 30)</span>
+            <div className="p-3.5 bg-orange-500/10 rounded-2xl border border-orange-500/20 flex flex-col items-center justify-center space-y-1 transition-all">
+              <div className="flex items-center gap-1.5 text-orange-500 text-xs font-extrabold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>أسئلة الاختبار</span>
+              </div>
+              <span className="font-black text-base md:text-lg text-orange-500 font-mono">10 أسئلة فقط</span>
             </div>
           </div>
 
           {/* Student Name Input Form */}
-          <form onSubmit={handleStartExam} className="space-y-4 bg-brand-primary/5 p-5 rounded-2xl border border-brand-primary/20 shadow-inner">
+          <form onSubmit={handleStartExam} className="space-y-4 bg-surface-secondary/40 p-4 sm:p-5 rounded-2xl border border-bdr shadow-inner">
             <div className="space-y-2">
-              <label className="block text-xs font-black text-txt-primary flex items-center gap-2">
-                <User className="w-4 h-4 text-brand-primary" />
-                <span>أدخل اسمك الثلاثي (سيتم إصداره رسمياً على الشهادة عند الاجتياز):</span>
+              <label className="block text-xs font-bold text-txt-primary flex items-center gap-2">
+                <User className="w-4 h-4 text-orange-500 shrink-0" />
+                <span>أدخل اسمك الثلاثي (ليظهر رسمياً على الشهادة عند الإكمال):</span>
               </label>
               <input
                 type="text"
@@ -89,7 +89,7 @@ export const HtmlExamLaunchPage: React.FC = () => {
                   if (errorMsg) setErrorMsg('');
                 }}
                 placeholder="مثال: أحمد علي عبد الله"
-                className="w-full px-4 py-3 bg-surface border border-bdr rounded-xl text-sm font-bold text-txt-primary focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-right shadow-sm"
+                className="w-full px-4 py-3 bg-surface border border-bdr rounded-xl text-sm font-bold text-txt-primary focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-right shadow-xs"
               />
               {errorMsg && <p className="text-xs text-red-500 font-bold animate-in fade-in">{errorMsg}</p>}
             </div>
@@ -100,25 +100,21 @@ export const HtmlExamLaunchPage: React.FC = () => {
               size="lg"
               fullWidth
               rightIcon={<ArrowLeft className="w-5 h-5" />}
-              className="shadow-lg shadow-brand-primary/20 hover:scale-[1.01] transition-transform"
+              className="shadow-lg shadow-orange-500/20 hover:scale-[1.01] transition-all font-black text-base"
             >
               بدء اختبار HTML الآن
             </Button>
           </form>
 
-          {/* Features Highlights */}
-          <div className="space-y-2.5 pt-2 border-t border-bdr text-xs text-txt-secondary font-medium">
+          {/* Simplified Clean Highlights */}
+          <div className="space-y-2 pt-2 border-t border-bdr text-xs text-txt-muted font-medium">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>يتكون الاختبار من أسئلة اختيار من متعدد، صح أم خطأ، وتوقع مخرجات الكود البرمجي.</span>
+              <span>أسئلة تفاعلية متنوعة تقيس المفاهيم والمهارات البرمجية الأساسية.</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>يحصل الناجحون بـ 50% أو أعلى على شهادة معتمدة رقمية قابلة للتحميل بتنسيق PNG/PDF.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>في حال عدم اجتياز الاختبار من المحاولة الأولى، يمكنك إعادة الاختبار فوراً للتطوير والمراجعة.</span>
+              <ShieldCheck className="w-4 h-4 text-orange-500 shrink-0" />
+              <span>شهادة إتقان رقمية معتمدة قابلة للتحميل والمشاركة عند الإنجاز.</span>
             </div>
           </div>
         </Card>
@@ -126,3 +122,4 @@ export const HtmlExamLaunchPage: React.FC = () => {
     </div>
   );
 };
+

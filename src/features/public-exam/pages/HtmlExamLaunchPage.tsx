@@ -55,22 +55,12 @@ export const HtmlExamLaunchPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Exam Questions Info Grid (30 Total Pool, 10 per Exam) */}
-          <div className="grid grid-cols-2 gap-3 text-center">
-            <div className="p-3.5 bg-surface-secondary/80 rounded-2xl border border-bdr flex flex-col items-center justify-center space-y-1 hover:border-orange-500/30 transition-all">
-              <div className="flex items-center gap-1.5 text-txt-muted text-xs font-bold">
-                <BookOpen className="w-3.5 h-3.5 text-orange-500" />
-                <span>إجمالي بنك الأسئلة</span>
-              </div>
-              <span className="font-black text-base md:text-lg text-txt-primary font-mono">30 سؤالاً</span>
-            </div>
-
-            <div className="p-3.5 bg-orange-500/10 rounded-2xl border border-orange-500/20 flex flex-col items-center justify-center space-y-1 transition-all">
-              <div className="flex items-center gap-1.5 text-orange-500 text-xs font-extrabold">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>أسئلة الاختبار</span>
-              </div>
-              <span className="font-black text-base md:text-lg text-orange-500 font-mono">10 أسئلة فقط</span>
+          {/* Exam Questions Info Badge */}
+          <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex items-center justify-center gap-3 text-center">
+            <BookOpen className="w-5 h-5 text-orange-500 shrink-0" />
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-txt-secondary font-bold">عدد أسئلة الاختبار:</span>
+              <span className="font-black text-lg text-orange-500 font-mono">30 سؤالاً</span>
             </div>
           </div>
 

@@ -11,10 +11,7 @@ export const HtmlExamTakePage: React.FC = () => {
   const navigate = useNavigate();
 
   const studentName = localStorage.getItem('itqan_student_name') || 'طالب إتقان';
-  const [questions] = useState(() => {
-    const all = getHtmlExamQuestions();
-    return all.slice(0, 10);
-  });
+  const [questions] = useState(() => getHtmlExamQuestions());
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [markedForReview, setMarkedForReview] = useState<Record<string, boolean>>({});
